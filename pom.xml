@@ -104,6 +104,17 @@
             <artifactId>spring-tx</artifactId>
             <version>4.3.16.RELEASE</version>
         </dependency>
+        <!--整合shiro-->
+        <dependency>
+            <groupId>org.apache.shiro</groupId>
+            <artifactId>shiro-spring</artifactId>
+            <version>1.4.0</version>
+        </dependency>
+        <!--引入thymeleaf引擎-->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-thymeleaf</artifactId>
+        </dependency>
     </dependencies>
 
     <build>
