@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <title>品牌列表</title>
+</head>
+<body>
+<
+<table class="table table-hover table-condensed">
+    <legend>
+        <strong>品牌列表</strong>
+    </legend>
+    <thead>
+    <tr>
+        <th>品牌编号</th>
+        <th>名称</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="brand : ${brandList}">
+        <th scope="row" th:text="${brand.id}"></th>
+        <td th:text="${brand.name}"></td>
+        <td><a class="btn btn-danger" th:href="@{/brand/update/{brandId}(brandId=${brand.id})}">修改</a></td>
+        <td><a class="btn btn-danger" th:href="@{/brand/delete/{brandId}(brandId=${brand.id})}">删除</a></td>
+    </tr>
+    </tbody>
+</table>
+</body>
+</html>

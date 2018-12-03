@@ -14,4 +14,4 @@ spring:
     mode: LEGACYHTML5
     cache: false
 
-debug: false
+debug: true

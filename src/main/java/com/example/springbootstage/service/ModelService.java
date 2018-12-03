@@ -1,4 +1,6 @@
 package com.example.springbootstage.service;
 
-public interface ModelService {
+import com.example.springbootstage.entity.Model;
+
+public interface ModelService extends BaseService<Model>{
 }

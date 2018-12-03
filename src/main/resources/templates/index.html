@@ -1,10 +1,14 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
 <head>
     <meta charset="UTF-8">
     <title>index</title>
 </head>
 <body>
 <h1>index</h1>
+<a class="btn btn-danger" th:href="@{/brand/create}">新增品牌</a>
+<a class="btn btn-danger" th:href="@{/model/create}">新增型号</a>
+<a class="btn btn-danger" th:href="@{/package/create}">新增套餐</a>
+<a class="btn btn-danger" th:href="@{/store/create}">新增门店</a>
 </body>
 </html>

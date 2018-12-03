@@ -3,8 +3,6 @@ package com.example.springbootstage.entity;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Data;
-import lombok.Getter;
-import lombok.Setter;
 
 import javax.persistence.*;
 import java.util.Date;
@@ -23,6 +21,8 @@ public class Model {
     private Brand brand;
 
     private String modelCode;
+
+    private String price;
 
     private String name;
 
