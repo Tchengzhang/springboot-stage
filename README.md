@@ -6,5 +6,6 @@
              3.springboot整合jpa
              4.springboot使用AOP记录请求日志存入数据库
              5.springboot整合redis对请求进行限流（分布式可用）
+             6.springboot整合Swagger2
              
 由于只供自己练习使用，没有很好的进行区分，全部写在一个项目中
