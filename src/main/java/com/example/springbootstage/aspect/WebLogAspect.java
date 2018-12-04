@@ -3,9 +3,11 @@ package com.example.springbootstage.aspect;
 
 import com.example.springbootstage.annotation.WebLog;
 import com.example.springbootstage.entity.RequestLog;
+import com.example.springbootstage.entity.UserInfo;
 import com.example.springbootstage.service.RequestLogService;
 import com.example.springbootstage.utils.IpUtil;
 import com.example.springbootstage.utils.JsonUtils;
+import org.apache.shiro.SecurityUtils;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.*;
 import org.aspectj.lang.reflect.MethodSignature;
@@ -55,7 +57,7 @@ public class WebLogAspect {
 
         RequestLog requestLog = new RequestLog();
         WebLog webLog = method.getAnnotation(WebLog.class);
-        if(webLog != null){
+        if (webLog != null) {
             //注解上的描述
             requestLog.setOperation(webLog.value());
         }
@@ -75,18 +77,17 @@ public class WebLogAspect {
         String httpMethod = request.getMethod();
         String params = "";
         String type = request.getContentType();
-        if ("POST".equals(httpMethod)&&MediaType.APPLICATION_JSON_VALUE.equals(type)){
-             params = Arrays.toString(args);
-        }else {
-            Map<String,String[]> paramsMap = request.getParameterMap();
-            Map<String,String> paramsTmpMap = new HashMap<>();
+        if ("POST".equals(httpMethod) && MediaType.APPLICATION_JSON_VALUE.equals(type)) {
+            params = Arrays.toString(args);
+        } else {
+            Map<String, String[]> paramsMap = request.getParameterMap();
+            Map<String, String> paramsTmpMap = new HashMap<>();
             paramsMap.keySet().forEach((e) -> paramsTmpMap.put(e, paramsMap.get(e)[0]));
             params = JsonUtils.toJson(paramsTmpMap);
         }
         requestLog.setParams(params);
-        /*//用户名
-        String username = ((SysUserEntity) SecurityUtils.getSubject().getPrincipal()).getUsername();
-        sysLog.setUsername(username);*/
+        String username = (String) SecurityUtils.getSubject().getPrincipal();
+        requestLog.setUsername(username);
 
         requestLog.setTime(time);
         requestLog.setCreateDate(new Date());

@@ -1,10 +1,10 @@
 package com.example.springbootstage.controller;
 
+import com.example.springbootstage.annotation.WebLog;
 import com.example.springbootstage.entity.Store;
 import com.example.springbootstage.entity.Clerk;
 import com.example.springbootstage.service.StoreService;
 import com.example.springbootstage.service.ClerkService;
-import com.example.springbootstage.service.PackageService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
@@ -25,12 +25,14 @@ public class ClerkController {
     private StoreService storeService;
 
     @GetMapping
+    @WebLog(value = "跳转店员列表页")
     public String getClerkList(ModelMap map) {
         map.addAttribute("clerkList", clerkService.getAll());
         return "clerkList";
     }
 
     @GetMapping("/create")
+    @WebLog(value = "跳转店员页")
     public String createForm(ModelMap map, HttpSession session) {
         Clerk clerk = new Clerk();
         clerk.setStore(new Store()); //此处必须为store赋值，不然会报错
@@ -42,6 +44,7 @@ public class ClerkController {
     }
 
     @PostMapping({"/save", "/update"})
+    @WebLog(value = "插入或修改店员信息")
     public String save(@ModelAttribute Clerk clerk, HttpServletRequest request) {
         String url = request.getRequestURI();
         if (url.contains("save")) {
@@ -54,6 +57,7 @@ public class ClerkController {
     }
 
     @GetMapping("/update/{id}")
+    @WebLog(value = "跳转修改店员页")
     public String getClerkForm(@PathVariable Long id, ModelMap map) {
         map.addAttribute("clerk", clerkService.getById(id));
         map.addAttribute("action", "update");
@@ -62,6 +66,7 @@ public class ClerkController {
     }
 
     @GetMapping("/delete/{id}")
+    @WebLog(value = "删除店员")
     public String deleteClerk(@PathVariable Long id) {
         clerkService.delById(id);
         return "redirect:/clerk/";

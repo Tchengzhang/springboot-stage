@@ -1,5 +1,6 @@
 package com.example.springbootstage.controller;
 
+import com.example.springbootstage.annotation.WebLog;
 import com.example.springbootstage.entity.Brand;
 import com.example.springbootstage.entity.Model;
 import com.example.springbootstage.entity.Package;
@@ -32,12 +33,14 @@ public class ModelController {
     private PackageService packageService;
 
     @GetMapping
+    @WebLog(value = "跳转机型列表页")
     public String getModelList(ModelMap map) {
         map.addAttribute("modelList", modelService.getAll());
         return "modelList";
     }
 
     @GetMapping("/create")
+    @WebLog(value = "跳转机型页")
     public String createForm(ModelMap map, HttpSession session) {
         Model model = new Model();
         model.setBrand(new Brand()); //此处必须为brand赋值，不然会报错
@@ -49,6 +52,7 @@ public class ModelController {
     }
 
     @PostMapping({"/save", "/update"})
+    @WebLog(value = "插入或修改机型信息")
     public String save(@ModelAttribute Model model, HttpServletRequest request) {
         String url = request.getRequestURI();
         if (url.contains("save")) {
@@ -61,6 +65,7 @@ public class ModelController {
     }
 
     @GetMapping("/update/{id}")
+    @WebLog(value = "跳转修改机型页")
     public String getModelForm(@PathVariable Long id, ModelMap map) {
         map.addAttribute("model", modelService.getById(id));
         map.addAttribute("action", "update");
@@ -69,19 +74,15 @@ public class ModelController {
     }
 
     @GetMapping("/delete/{id}")
+    @WebLog(value = "删除机型")
     public String deleteModel(@PathVariable Long id) {
         modelService.delById(id);
         return "redirect:/model/";
     }
 
-    @GetMapping("/getBrandList")
-    @ResponseBody
-    public List<Brand> deleteModel() {
-        return brandService.getAll();
-    }
-
 
     @GetMapping("/package/{id}")
+    @WebLog(value = "进入套餐绑定页面")
     public String goPackages(@PathVariable Long id, ModelMap map) {
         Model model = modelService.getById(id);
         List<Package> packageList = model.getPackageList();
@@ -111,6 +112,7 @@ public class ModelController {
     }
 
     @PostMapping("/addPackageToModel")
+    @WebLog(value = "添加绑定套餐")
     public String addPackageToModel(String[] id, String modelId) {
         Model model = modelService.getById(Long.valueOf(modelId));
         List<Package> packages = model.getPackageList();
@@ -127,6 +129,7 @@ public class ModelController {
     }
 
     @GetMapping("/deleteFromModel")
+    @WebLog(value = "删除绑定套餐")
     public String deleteFromModel(Long modelId,Long packageId) {
         Model model = modelService.getById(modelId);
         List<Package> packages = model.getPackageList();

@@ -1,5 +1,6 @@
 package com.example.springbootstage.controller;
 
+import com.example.springbootstage.annotation.WebLog;
 import com.example.springbootstage.entity.SysRole;
 import com.example.springbootstage.entity.UserInfo;
 import com.example.springbootstage.service.UserInfoService;
@@ -25,17 +26,20 @@ public class HomeController {
     private UserInfoService userInfoService;
 
     @RequestMapping({"/", "/index"})
+    @WebLog(value = "跳转主页")
     public String index() {
         return "/index";
     }
 
     @GetMapping("/login")
+    @WebLog(value = "跳转登录页面")
     public String login() {
         return "login";
     }
 
 
     @PostMapping("/login")
+    @WebLog(value = "登录")
     public String login(HttpServletRequest request, Map<String, Object> map) throws Exception {
         System.out.println("HomeController.login()");
         // 登录失败从request中获取shiro处理的异常信息。
@@ -64,17 +68,20 @@ public class HomeController {
     }
 
     @RequestMapping("/403")
+    @WebLog(value = "跳转失败页面")
     public String unauthorizedRole() {
         System.out.println("------没有权限-------");
         return "403";
     }
 
     @GetMapping("/register")
+    @WebLog(value = "跳转注册页面")
     public String goRegister() {
         return "register";
     }
 
     @PostMapping("/register")
+    @WebLog(value = "注册")
     public String register(@ModelAttribute UserInfo userInfo) {
         String userName = userInfo.getUsername();
         String password = userInfo.getPassword();

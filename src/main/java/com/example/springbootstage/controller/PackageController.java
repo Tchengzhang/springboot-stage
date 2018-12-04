@@ -1,5 +1,6 @@
 package com.example.springbootstage.controller;
 
+import com.example.springbootstage.annotation.WebLog;
 import com.example.springbootstage.entity.Package;
 import com.example.springbootstage.service.PackageService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,12 +20,14 @@ public class PackageController {
     private PackageService packageService;
     
     @GetMapping
+    @WebLog(value = "跳转品套餐列表页")
     public String getPackageList(ModelMap map) {
         map.addAttribute("packageList", packageService.getAll());
         return "packageList";
     }
 
     @GetMapping("/create")
+    @WebLog(value = "跳转品套餐页")
     public String createForm(ModelMap map) {
         Package p = new Package();
         map.addAttribute("package", p);
@@ -34,6 +37,7 @@ public class PackageController {
     }
 
     @PostMapping({"/save", "/update"})
+    @WebLog(value = "插入或修改套餐信息")
     public String save(@ModelAttribute Package p, HttpServletRequest request) {
         String url = request.getRequestURI();
         if (url.contains("save")) {
@@ -46,6 +50,7 @@ public class PackageController {
     }
 
     @GetMapping("/update/{id}")
+    @WebLog(value = "跳转修改套餐页")
     public String getPackageForm(@PathVariable Long id, ModelMap map) {
         map.addAttribute("package", packageService.getById(id));
         map.addAttribute("action", "update");
@@ -53,6 +58,7 @@ public class PackageController {
     }
 
     @GetMapping("/delete/{id}")
+    @WebLog(value = "删除套餐")
     public String deleteModel(@PathVariable Long id) {
         packageService.delById(id);
         return "redirect:/package/";

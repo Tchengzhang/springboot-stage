@@ -1,5 +1,6 @@
 package com.example.springbootstage.controller;
 
+import com.example.springbootstage.annotation.WebLog;
 import com.example.springbootstage.entity.Brand;
 import com.example.springbootstage.entity.Model;
 import com.example.springbootstage.entity.Store;
@@ -24,12 +25,14 @@ public class StoreController {
     private StoreService storeService;
 
     @GetMapping
+    @WebLog(value = "跳转门店列表页")
     public String getStoreList(ModelMap map) {
         map.addAttribute("storeList", storeService.getAll());
         return "storeList";
     }
 
     @GetMapping("/create")
+    @WebLog(value = "跳转门店页")
     public String createForm(ModelMap map) {
         Store store = new Store();
         map.addAttribute("store", store);
@@ -39,6 +42,7 @@ public class StoreController {
     }
 
     @PostMapping({"/save", "/update"})
+    @WebLog(value = "插入或修改门店信息")
     public String save(@ModelAttribute Store store, HttpServletRequest request) {
         String url = request.getRequestURI();
         if (url.contains("save")) {
@@ -51,6 +55,7 @@ public class StoreController {
     }
 
     @GetMapping("/update/{id}")
+    @WebLog(value = "跳转修改门店页")
     public String getStoreForm(@PathVariable Long id, ModelMap map) {
         map.addAttribute("store", storeService.getById(id));
         map.addAttribute("action", "update");
@@ -58,6 +63,7 @@ public class StoreController {
     }
 
     @GetMapping("/delete/{id}")
+    @WebLog(value = "删除门店")
     public String deleteStore(@PathVariable Long id) {
         storeService.delById(id);
         return "redirect:/store/";
