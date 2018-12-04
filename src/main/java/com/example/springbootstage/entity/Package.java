@@ -26,6 +26,10 @@ public class Package {
     @JoinTable(name = "ModelPackage", joinColumns = {@JoinColumn(name = "pid")}, inverseJoinColumns = {@JoinColumn(name = "mid")})
     private List<Model> modelList;
 
+    @ManyToMany
+    @JoinTable(name = "StorePackage", joinColumns = {@JoinColumn(name = "pid")}, inverseJoinColumns = {@JoinColumn(name = "sid")})
+    private List<Store> storeList;
+
     private String createUser;
 
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")

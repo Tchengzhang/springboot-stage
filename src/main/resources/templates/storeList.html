@@ -2,29 +2,41 @@
 <html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
 <head>
     <meta charset="UTF-8">
-    <title>套餐列表</title>
+    <title>门店列表</title>
 </head>
 <body>
 <table class="table table-hover table-condensed">
     <legend>
-        <strong>套餐列表</strong>
+        <strong>门店列表</strong>
     </legend>
     <thead>
     <tr>
-        <th>套餐编号</th>
+        <th>门店编号</th>
         <th>名称</th>
-        <th>类型</th>
+        <th>省</th>
+        <th>市</th>
+        <th>区</th>
+        <th>具体地址</th>
+        <th>经度</th>
+        <th>纬度</th>
+        <th>区域编码</th>
         <th>状态</th>
     </tr>
     </thead>
     <tbody>
-    <tr th:each="package : ${packageList}">
-        <th scope="row" th:text="${package.id}"></th>
-        <td th:text="${package.name}"></td>
-        <td th:text="${package.type}"></td>
-        <td th:text="${package.status} == '1'?启用:停用"></td>
-        <td><a class="btn btn-danger" th:href="@{/package/update/{packageId}(packageId=${package.id})}">修改</a></td>
-        <td><a class="btn btn-danger" th:href="@{/package/delete/{packageId}(packageId=${package.id})}">删除</a></td>
+    <tr th:each="store : ${storeList}">
+        <th scope="row" th:text="${store.id}"></th>
+        <td th:text="${store.name}"></td>
+        <td th:text="${store.province}"></td>
+        <td th:text="${store.city}"></td>
+        <td th:text="${store.district}"></td>
+        <td th:text="${store.detail}"></td>
+        <td th:text="${store.longitude}"></td>
+        <td th:text="${store.latitude}"></td>
+        <td th:text="${store.zoneCode}"></td>
+        <td th:text="${store.status} == '1'?启用:停用"></td>
+        <td><a class="btn btn-danger" th:href="@{/store/update/{storeId}(storeId=${store.id})}">修改</a></td>
+        <td><a class="btn btn-danger" th:href="@{/store/delete/{storeId}(storeId=${store.id})}">删除</a></td>
     </tr>
     </tbody>
 </table>

@@ -2,53 +2,68 @@
 <html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
 <head>
     <meta charset="UTF-8">
-    <title>机型详情</title>
+    <title>门店详情</title>
 </head>
 <body>
-<form th:action="@{/model/{action}(action=${action})}" method="post" class="form-horizontal">
+<form th:action="@{/store/{action}(action=${action})}" method="post" class="form-horizontal">
 
-    <input type="hidden" name="id" th:value="${model.id}"/>
+    <input type="hidden" name="id" th:value="${store.id}"/>
 
     <div class="form-group">
-        <label for="model_brand" class="col-sm-2 control-label">品牌</label>
+        <label for="store_name" class="col-sm-2 control-label">名称</label>
         <div class="col-xs-4">
-            <select class="form-control select2" id="model_brand" name="brand"
-                    th:value="${model.brand} == null? ${model.brand.name}:''">
-                <option>请选择品牌</option>
-                <option th:each="brand : ${brandList}"
-                        th:value="${brand.id}"
-                        th:text="${brand.name}"
-                        th:selected="${model.brand.id  eq brand.id}">
-                </option>
-            </select>
+            <input type="text" class="form-control" id="store_name" name="name" th:value="${store.name}"/>
+        </div>
+    </div>
+    <div class="form-group">
+        <label for="store_province" class="col-sm-2 control-label">省</label>
+        <div class="col-xs-4">
+            <input type="text" class="form-control" id="store_province" name="province" th:value="${store.province}"/>
+        </div>
+    </div>
+    <div class="form-group">
+        <label for="store_city" class="col-sm-2 control-label">城</label>
+        <div class="col-xs-4">
+            <input type="text" class="form-control" id="store_city" name="city" th:value="${store.city}"/>
+        </div>
+    </div>
+    <div class="form-group">
+        <label for="store_district" class="col-sm-2 control-label">区</label>
+        <div class="col-xs-4">
+            <input type="text" class="form-control" id="store_district" name="district" th:value="${store.district}"/>
+        </div>
+    </div>
+    <div class="form-group">
+        <label for="store_detail" class="col-sm-2 control-label">具体地址</label>
+        <div class="col-xs-4">
+            <input type="text" class="form-control" id="store_detail" name="detail" th:value="${store.detail}"/>
+        </div>
+    </div>
+    <div class="form-group">
+        <label for="store_longitude" class="col-sm-2 control-label">经度</label>
+        <div class="col-xs-4">
+            <input type="text" class="form-control" id="store_longitude" name="longitude" th:value="${store.longitude}"/>
+        </div>
+    </div>
+    <div class="form-group">
+        <label for="store_latitude" class="col-sm-2 control-label">纬度</label>
+        <div class="col-xs-4">
+            <input type="text" class="form-control" id="store_latitude" name="latitude" th:value="${store.latitude}"/>
+        </div>
+    </div>
+    <div class="form-group">
+        <label for="store_zoneCode" class="col-sm-2 control-label">区域编码</label>
+        <div class="col-xs-4">
+            <input type="text" class="form-control" id="store_zoneCode" name="zoneCode" th:value="${store.zoneCode}"/>
         </div>
     </div>
 
     <div class="form-group">
-        <label for="model_name" class="col-sm-2 control-label">名称</label>
+        <label for="store_status" class="col-sm-2 control-label">状态</label>
         <div class="col-xs-4">
-            <input type="text" class="form-control" id="model_name" name="name" th:value="${model.name}"/>
-        </div>
-    </div>
-
-    <div class="form-group">
-        <label for="model_type" class="col-sm-2 control-label">类型</label>
-        <div class="col-xs-4">
-            <input type="text" class="form-control" id="model_type" name="type" th:value="${model.type}"/>
-        </div>
-    </div>
-    <div class="form-group">
-        <label for="model_price" class="col-sm-2 control-label">价格</label>
-        <div class="col-xs-4">
-            <input type="text" class="form-control" id="model_price" name="price" th:value="${model.price}"/>
-        </div>
-    </div>
-    <div class="form-group">
-        <label for="model_status" class="col-sm-2 control-label">状态</label>
-        <div class="col-xs-4">
-            <select class="form-control" id="model_status" name="status">
-                <option value="1" th:selected="${model.status=='1'}">启用</option>
-                <option value="0" th:selected="${model.status=='0'}">停用</option>
+            <select class="form-control" id="store_status" name="status">
+                <option value="1" th:selected="${store.status=='1'}">启用</option>
+                <option value="0" th:selected="${store.status=='0'}">停用</option>
             </select>
         </div>
     </div>

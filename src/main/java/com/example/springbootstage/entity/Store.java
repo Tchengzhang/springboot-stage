@@ -31,9 +31,15 @@ public class Store {
 
     private String zoneCode;
 
+    private String status;
+
     @ManyToMany
     @JoinTable(name = "ModelStore", joinColumns = {@JoinColumn(name = "sid")}, inverseJoinColumns = {@JoinColumn(name = "mid")})
     private List<Model> modelList;
+
+    @ManyToMany
+    @JoinTable(name = "StorePackage", joinColumns = {@JoinColumn(name = "sid")}, inverseJoinColumns = {@JoinColumn(name = "pid")})
+    private List<Package> packageList;
 
     private String createUser;
 

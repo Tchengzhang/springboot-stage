@@ -1,10 +1,9 @@
 package com.example.springbootstage.controller;
 
-import com.example.springbootstage.entity.Brand;
-import com.example.springbootstage.entity.Model;
-import com.example.springbootstage.entity.Package;
-import com.example.springbootstage.service.BrandService;
-import com.example.springbootstage.service.ModelService;
+import com.example.springbootstage.entity.Store;
+import com.example.springbootstage.entity.Clerk;
+import com.example.springbootstage.service.StoreService;
+import com.example.springbootstage.service.ClerkService;
 import com.example.springbootstage.service.PackageService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -14,137 +13,58 @@ import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import java.util.Date;
-import java.util.Iterator;
-import java.util.LinkedList;
-import java.util.List;
 
 @Controller
-@RequestMapping("/model")
-public class ModelController {
+@RequestMapping("/clerk")
+public class ClerkController {
 
     @Autowired
-    private ModelService modelService;
+    private ClerkService clerkService;
 
     @Autowired
-    private BrandService brandService;
-
-    @Autowired
-    private PackageService packageService;
+    private StoreService storeService;
 
     @GetMapping
-    public String getModelList(ModelMap map) {
-        map.addAttribute("modelList", modelService.getAll());
-        return "modelList";
+    public String getClerkList(ModelMap map) {
+        map.addAttribute("clerkList", clerkService.getAll());
+        return "clerkList";
     }
 
     @GetMapping("/create")
     public String createForm(ModelMap map, HttpSession session) {
-        Model model = new Model();
-        model.setBrand(new Brand()); //此处必须为brand赋值，不然会报错
-        map.addAttribute("model", model);
-        map.addAttribute("brandList", brandService.getAll());
+        Clerk clerk = new Clerk();
+        clerk.setStore(new Store()); //此处必须为store赋值，不然会报错
+        map.addAttribute("clerk", clerk);
+        map.addAttribute("storeList", storeService.getAll());
         map.addAttribute("action", "save");
-        return "modelForm";
+        return "clerkForm";
 
     }
 
     @PostMapping({"/save", "/update"})
-    public String save(@ModelAttribute Model model, HttpServletRequest request) {
+    public String save(@ModelAttribute Clerk clerk, HttpServletRequest request) {
         String url = request.getRequestURI();
         if (url.contains("save")) {
-            model.setCreateTime(new Date());
+            clerk.setCreateTime(new Date());
         } else {
-            model.setUpdateTime(new Date());
+            clerk.setUpdateTime(new Date());
         }
-        modelService.save(model);
-        return "redirect:/model/";
+        clerkService.save(clerk);
+        return "redirect:/clerk/";
     }
 
     @GetMapping("/update/{id}")
-    public String getModelForm(@PathVariable Long id, ModelMap map) {
-        map.addAttribute("model", modelService.getById(id));
+    public String getClerkForm(@PathVariable Long id, ModelMap map) {
+        map.addAttribute("clerk", clerkService.getById(id));
         map.addAttribute("action", "update");
-        map.addAttribute("brandList", brandService.getAll());
-        return "modelForm";
+        map.addAttribute("storeList", storeService.getAll());
+        return "clerkForm";
     }
 
     @GetMapping("/delete/{id}")
-    public String deleteModel(@PathVariable Long id) {
-        modelService.delById(id);
-        return "redirect:/model/";
-    }
-
-    @GetMapping("/getBrandList")
-    @ResponseBody
-    public List<Brand> deleteModel() {
-        return brandService.getAll();
-    }
-
-
-    @GetMapping("/package/{id}")
-    public String goPackages(@PathVariable Long id, ModelMap map) {
-        Model model = modelService.getById(id);
-        List<Package> packageList = model.getPackageList();
-        if (packageList == null) {
-            packageList = new LinkedList<>();
-            model.setPackageList(packageList);
-        }
-        map.addAttribute("model", model);
-        List<Package> packages = packageService.getAll();
-        if (packages == null) {
-            packages = new LinkedList<>();
-            map.addAttribute("packageList", packages);
-        } else {
-            Iterator<Package> pList = packages.iterator();
-            while ((pList.hasNext())) {
-                Package p = pList.next();
-                for (Package pp : packageList) {
-                    if (pp.getId().equals(p.getId())) {
-                        pList.remove();
-                    }
-                }
-            }
-            map.addAttribute("packageList", packages);
-        }
-
-        return "modelPackage";
-    }
-
-    @PostMapping("/addPackageToModel")
-    public String addPackageToModel(String[] id, String modelId) {
-        Model model = modelService.getById(Long.valueOf(modelId));
-        List<Package> packages = model.getPackageList();
-        for (String idd : id) {
-            Package p = packageService.getById(Long.valueOf(idd));
-            if (!packages.contains(p)) {
-                packages.add(p);
-            }
-
-        }
-        model.setPackageList(packages);
-        modelService.save(model);
-        return "redirect:/model/package/" + Long.valueOf(modelId);
-    }
-
-    @GetMapping("/deleteFromModel")
-    public String deleteFromModel(Long modelId,Long packageId) {
-        Model model = modelService.getById(modelId);
-        List<Package> packages = model.getPackageList();
-/*        for (Package p : packages) {
-            if (p.getId().equals(packageId)) {
-                packages.remove(p);
-            }
-        }*/
-        Iterator<Package> pList = packages.iterator();
-        while ((pList.hasNext())) {
-            Package p = pList.next();
-            if (p.getId().equals(packageId)) {
-                pList.remove();
-            }
-        }
-        model.setPackageList(packages);
-        modelService.save(model);
-        return "redirect:/model/package/" + modelId;
+    public String deleteClerk(@PathVariable Long id) {
+        clerkService.delById(id);
+        return "redirect:/clerk/";
     }
 
 

@@ -58,7 +58,7 @@ public class StoreController {
     }
 
     @GetMapping("/delete/{id}")
-    public String deleteModel(@PathVariable Long id) {
+    public String deleteStore(@PathVariable Long id) {
         storeService.delById(id);
         return "redirect:/store/";
     }
