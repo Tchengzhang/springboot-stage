@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <title>绑定套餐</title>
+</head>
+<body>
+
+<form th:action="@{/model/addPackageToModel}" method="post" class="form-horizontal">
+    <input type="hidden" name="modelId" th:value="${model.id}"/>
+    <div th:each="package : ${packageList}">
+        <input type="checkbox" name="id" th:value="${package.id}" th:text="${package.name}"/>
+    </div>
+
+    <div class="form-group">
+        <div class="col-sm-offset-2 col-sm-10">
+            <input class="btn btn-primary" type="submit" value="提交"/>  
+            <input class="btn" type="button" value="返回" onclick="history.back()"/>
+        </div>
+    </div>
+</form>
+
+<table class="table table-hover table-condensed">
+    <legend>
+        <strong>机型</strong>
+    </legend>
+    <thead>
+    <tr>
+        <th>机型编号</th>
+        <th>名称</th>
+        <th>品牌</th>
+        <th>类型</th>
+        <th>价格</th>
+        <th>状态</th>
+        <th>套餐</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr>
+        <th scope="row" th:text="${model.id}"></th>
+        <td th:text="${model.name}"></td>
+        <td th:text="${model.brand.name}"></td>
+        <td th:text="${model.type}"></td>
+        <td th:text="${model.price}"></td>
+        <td th:text="${model.status} == '1'?启用:停用"></td>
+        <td th:each="package : ${model.packageList}">
+            <span th:text="${package.name}">
+            </span>
+            <a class="btn btn-danger"
+               th:href="@{/model/deleteFromModel(modelId=${model.id},packageId=${package.id})}">删除</a>
+            <br/>
+            <hr/>
+        </td>
+    </tr>
+    </tbody>
+</table>
+</body>
+</html>

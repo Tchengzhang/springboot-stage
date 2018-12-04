@@ -5,7 +5,6 @@
     <title>机型列表</title>
 </head>
 <body>
-<
 <table class="table table-hover table-condensed">
     <legend>
         <strong>机型列表</strong>
@@ -30,6 +29,7 @@
         <td th:text="${model.status} == '1'?启用:停用"></td>
         <td><a class="btn btn-danger" th:href="@{/model/update/{modelId}(modelId=${model.id})}">修改</a></td>
         <td><a class="btn btn-danger" th:href="@{/model/delete/{modelId}(modelId=${model.id})}">删除</a></td>
+        <td><a class="btn btn-danger" th:href="@{/model/package/{modelId}(modelId=${model.id})}">套餐绑定</a></td>
     </tr>
     </tbody>
 </table>

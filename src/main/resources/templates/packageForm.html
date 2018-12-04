@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <title>套餐详情</title>
+</head>
+<body>
+<form th:action="@{/package/{action}(action=${action})}" method="post" class="form-horizontal">
+
+    <input type="hidden" name="id" th:value="${package.id}"/>
+
+    
+    <div class="form-group">
+        <label for="package_name" class="col-sm-2 control-label">名称</label>
+        <div class="col-xs-4">
+            <input type="text" class="form-control" id="package_name" name="name" th:value="${package.name}"/>
+        </div>
+    </div>
+
+    <div class="form-group">
+        <label for="package_type" class="col-sm-2 control-label">类型</label>
+        <div class="col-xs-4">
+            <input type="text" class="form-control" id="package_type" name="type" th:value="${package.type}"/>
+        </div>
+    </div>
+
+    <div class="form-group">
+        <label for="package_status" class="col-sm-2 control-label">状态</label>
+        <div class="col-xs-4">
+            <select class="form-control" id="package_status" name="status">
+                <option value="1" th:selected="${package.status=='1'}">启用</option>
+                <option value="0" th:selected="${package.status=='0'}">停用</option>
+            </select>
+        </div>
+    </div>
+
+    <div class="form-group">
+        <div class="col-sm-offset-2 col-sm-10">
+            <input class="btn btn-primary" type="submit" value="提交"/>  
+            <input class="btn" type="button" value="返回" onclick="history.back()"/>
+        </div>
+    </div>
+</form>
+
+</body>
+<script>
+
+</script>
+</html>
