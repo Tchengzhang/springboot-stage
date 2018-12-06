@@ -17,7 +17,7 @@ public class Swagger2 {
         return new Docket(DocumentationType.SWAGGER_2)
                 .apiInfo(apiInfo())
                 .select()
-                .apis(RequestHandlerSelectors.basePackage("com.example.spring_demo.controller"))
+                .apis(RequestHandlerSelectors.basePackage("com.example.springbootstage.controller"))
                 .paths(PathSelectors.any())
                 .build();
     }
