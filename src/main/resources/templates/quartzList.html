@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <title>定时任务列表</title>
+</head>
+<body>
+<
+<table class="table table-hover table-condensed">
+    <legend>
+        <strong>定时任务列表</strong>
+    </legend>
+    <thead>
+    <tr>
+        <th>任务编号</th>
+        <th>任务组</th>
+        <th>任务名称</th>
+        <th>任务类</th>
+        <th>任务cron</th>
+        <th>任务描述</th>
+        <th>状态</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="quartz : ${quartzList}">
+        <th scope="row" th:text="${quartz.id}"></th>
+        <td th:text="${quartz.jobGroup}"></td>
+        <td th:text="${quartz.jobName}"></td>
+        <td th:text="${quartz.jobClassName}"></td>
+        <td th:text="${quartz.cornExpression}"></td>
+        <td th:text="${quartz.description}"></td>
+        <td th:text="${quartz.jobState} == '1'?启用:停用"></td>
+        <td><a class="btn btn-danger" th:href="@{/quartz/update/{quartzId}(quartzId=${quartz.id})}">修改</a></td>
+        <td><a class="btn btn-danger" th:href="@{/quartz/delete/{quartzId}(quartzId=${quartz.id})}">删除</a></td>
+    </tr>
+    </tbody>
+</table>
+</body>
+</html>

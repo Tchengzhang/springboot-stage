@@ -81,8 +81,8 @@ public class WebLogAspect {
             params = Arrays.toString(args);
         } else {
             Map<String, String[]> paramsMap = request.getParameterMap();
-            Map<String, String> paramsTmpMap = new HashMap<>();
-            paramsMap.keySet().forEach((e) -> paramsTmpMap.put(e, paramsMap.get(e)[0]));
+            Map<String, Object> paramsTmpMap = new HashMap<>();
+            paramsMap.keySet().forEach((e) -> paramsTmpMap.put(e, paramsMap.get(e)));
             params = JsonUtils.toJson(paramsTmpMap);
         }
         requestLog.setParams(params);

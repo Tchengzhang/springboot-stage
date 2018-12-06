@@ -8,6 +8,7 @@ import com.example.springbootstage.utils.ResultUtil;
 import lombok.extern.java.Log;
 import org.quartz.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -55,7 +56,7 @@ public class QuartzController {
         return ResultUtil.ok();
     }
 
-    @PostMapping("/list")
+    @GetMapping("/list")
     public Result list(){
         log.info("任务列表");
         List<Quartz> list = quartzService.findAll();
