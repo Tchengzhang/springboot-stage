@@ -104,6 +104,12 @@
             <artifactId>spring-tx</artifactId>
             <version>4.3.16.RELEASE</version>
         </dependency>
+        <!--使用阿里的esayexcel导入导出excel-->
+        <dependency>
+            <groupId>com.alibaba</groupId>
+            <artifactId>easyexcel</artifactId>
+            <version>1.1.2-beta4</version>
+        </dependency>
         <!--整合shiro-->
         <dependency>
             <groupId>org.apache.shiro</groupId>
