@@ -2,15 +2,21 @@ package com.example.springbootstage.controller;
 
 import com.example.springbootstage.annotation.WebLog;
 import com.example.springbootstage.entity.Package;
+import com.example.springbootstage.excel.ExcelUtil;
 import com.example.springbootstage.service.PackageService;
+import com.example.springbootstage.utils.DateUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.util.Date;
+import java.util.LinkedList;
+import java.util.List;
 
 @Controller
 @RequestMapping("/package")
@@ -18,7 +24,7 @@ public class PackageController {
 
     @Autowired
     private PackageService packageService;
-    
+
     @GetMapping
     @WebLog(value = "跳转品套餐列表页")
     public String getPackageList(ModelMap map) {
@@ -63,6 +69,33 @@ public class PackageController {
         packageService.delById(id);
         return "redirect:/package/";
     }
-    
+
+    /**
+     * 导出 Excel（一个 sheet）
+     */
+    @GetMapping(value = "writeExcel")
+    public void writeExcel(HttpServletResponse response) {
+        List<Package> list = packageService.getAll();
+        String fileName = "套餐列表" + DateUtil.format(new Date(), "yyyyMMddhhmmss");
+        String sheetName = "套餐列表";
+
+        ExcelUtil.writeExcel(response, list, fileName, sheetName, new Package());
+    }
+
+
+    /**
+     * 读取 Excel（指定某个 sheet）
+     */
+    @RequestMapping(value = "readExcel", method = RequestMethod.POST)
+    public String readExcel(MultipartFile excel, @RequestParam(defaultValue = "1") int sheetNo,
+                            @RequestParam(defaultValue = "1") int headLineNum) {
+        List<Object> list = ExcelUtil.readExcel(excel, new Package(), sheetNo, headLineNum);
+        Package p;
+        for (Object o : list) {
+            p = (Package) o;
+            packageService.save(p);
+        }
+        return "redirect:/package/";
+    }
 
 }

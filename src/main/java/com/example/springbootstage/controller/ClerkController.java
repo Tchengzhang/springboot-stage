@@ -3,16 +3,22 @@ package com.example.springbootstage.controller;
 import com.example.springbootstage.annotation.WebLog;
 import com.example.springbootstage.entity.Store;
 import com.example.springbootstage.entity.Clerk;
+import com.example.springbootstage.excel.ExcelUtil;
 import com.example.springbootstage.service.StoreService;
 import com.example.springbootstage.service.ClerkService;
+import com.example.springbootstage.service.PackageService;
+import com.example.springbootstage.utils.DateUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.util.Date;
+import java.util.List;
 
 @Controller
 @RequestMapping("/clerk")
@@ -72,5 +78,31 @@ public class ClerkController {
         return "redirect:/clerk/";
     }
 
+    /**
+     * 导出 Excel（一个 sheet）
+     */
+    @GetMapping(value = "writeExcel")
+    public void writeExcel(HttpServletResponse response) {
+        List<Clerk> list = clerkService.getAll();
+        String fileName = "店员列表" + DateUtil.format(new Date(), "yyyyMMddhhmmss");
+        String sheetName = "店员列表";
 
+        ExcelUtil.writeExcel(response, list, fileName, sheetName, new Clerk());
+    }
+
+
+    /**
+     * 读取 Excel（指定某个 sheet）
+     */
+    @RequestMapping(value = "readExcel", method = RequestMethod.POST)
+    public String readExcel(MultipartFile excel, @RequestParam(defaultValue = "1") int sheetNo,
+                            @RequestParam(defaultValue = "1") int headLineNum) {
+        List<Object> list = ExcelUtil.readExcel(excel, new Clerk(), sheetNo, headLineNum);
+        Clerk clerk;
+        for (Object o : list) {
+            clerk = (Clerk) o;
+            clerkService.save(clerk);
+        }
+        return "redirect:/clerk/";
+    }
 }

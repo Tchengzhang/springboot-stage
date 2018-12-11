@@ -4,15 +4,19 @@ import com.example.springbootstage.annotation.WebLog;
 import com.example.springbootstage.entity.Brand;
 import com.example.springbootstage.entity.Model;
 import com.example.springbootstage.entity.Store;
+import com.example.springbootstage.excel.ExcelUtil;
 import com.example.springbootstage.service.BrandService;
 import com.example.springbootstage.service.ModelService;
 import com.example.springbootstage.service.StoreService;
+import com.example.springbootstage.utils.DateUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.util.Date;
 import java.util.List;
@@ -69,5 +73,31 @@ public class StoreController {
         return "redirect:/store/";
     }
 
+    /**
+     * 导出 Excel（一个 sheet）
+     */
+    @GetMapping(value = "writeExcel")
+    public void writeExcel(HttpServletResponse response) {
+        List<Store> list = storeService.getAll();
+        String fileName = "门店列表" + DateUtil.format(new Date(), "yyyyMMddhhmmss");
+        String sheetName = "门店列表";
 
+        ExcelUtil.writeExcel(response, list, fileName, sheetName, new Store());
+    }
+
+
+    /**
+     * 读取 Excel（指定某个 sheet）
+     */
+    @RequestMapping(value = "readExcel", method = RequestMethod.POST)
+    public String readExcel(MultipartFile excel, @RequestParam(defaultValue = "1") int sheetNo,
+                            @RequestParam(defaultValue = "1") int headLineNum) {
+        List<Object> list = ExcelUtil.readExcel(excel, new Store(), sheetNo, headLineNum);
+        Store store;
+        for (Object o : list) {
+            store = (Store) o;
+            storeService.save(store);
+        }
+        return "redirect:/store/";
+    }
 }

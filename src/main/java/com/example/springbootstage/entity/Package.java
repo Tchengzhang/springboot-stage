@@ -1,5 +1,7 @@
 package com.example.springbootstage.entity;
 
+import com.alibaba.excel.annotation.ExcelProperty;
+import com.alibaba.excel.metadata.BaseRowModel;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Data;
 
@@ -10,16 +12,17 @@ import java.util.Objects;
 
 @Entity
 @Data
-public class Package {
+public class Package extends BaseRowModel {
 
     @Id
     @GeneratedValue
+    @ExcelProperty(value = {"id"}, index = 0)
     private Long id;
-
+    @ExcelProperty(value = {"套餐"}, index = 1)
     private String name;
-
+    @ExcelProperty(value = {"类型"}, index = 2)
     private String type;
-
+    @ExcelProperty(value = {"状态"}, index = 2)
     private String status; //1 启用，0 停用
 
     @ManyToMany

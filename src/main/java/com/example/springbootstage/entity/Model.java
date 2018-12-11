@@ -10,7 +10,7 @@ import java.util.List;
 
 @Entity
 @Data
-public class Model {
+public class Model{
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -19,15 +19,10 @@ public class Model {
     @ManyToOne(cascade = {CascadeType.ALL})
     @JoinColumn(name = "brand_id")
     private Brand brand;
-
     private String modelCode;
-
     private String price;
-
     private String name;
-
     private String type;
-
     private String status;
 
     @ManyToMany

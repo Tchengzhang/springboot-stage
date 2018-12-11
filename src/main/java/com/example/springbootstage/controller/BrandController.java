@@ -2,14 +2,19 @@ package com.example.springbootstage.controller;
 
 import com.example.springbootstage.annotation.WebLog;
 import com.example.springbootstage.entity.Brand;
+import com.example.springbootstage.excel.ExcelUtil;
 import com.example.springbootstage.service.BrandService;
+import com.example.springbootstage.utils.DateUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.util.Date;
+import java.util.List;
 
 @Controller
 @RequestMapping("/brand")
@@ -62,4 +67,32 @@ public class BrandController {
         return "redirect:/brand/";
     }
 
+
+    /**
+     * 导出 Excel（一个 sheet）
+     */
+    @GetMapping(value = "writeExcel")
+    public void writeExcel(HttpServletResponse response) {
+        List<Brand> list = brandService.getAll();
+        String fileName = "品牌列表" + DateUtil.format(new Date(), "yyyyMMddhhmmss");
+        String sheetName = "品牌列表";
+
+        ExcelUtil.writeExcel(response, list, fileName, sheetName, new Brand());
+    }
+
+
+    /**
+     * 读取 Excel（指定某个 sheet）
+     */
+    @RequestMapping(value = "readExcel", method = RequestMethod.POST)
+    public String readExcel(MultipartFile excel, @RequestParam(defaultValue = "1") int sheetNo,
+                            @RequestParam(defaultValue = "1") int headLineNum) {
+        List<Object> list = ExcelUtil.readExcel(excel, new Brand(), sheetNo, headLineNum);
+        Brand brand;
+        for (Object o : list) {
+            brand = (Brand) o;
+            brandService.save(brand);
+        }
+        return "redirect:/brand/";
+    }
 }

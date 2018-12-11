@@ -4,15 +4,20 @@ import com.example.springbootstage.annotation.WebLog;
 import com.example.springbootstage.entity.Brand;
 import com.example.springbootstage.entity.Model;
 import com.example.springbootstage.entity.Package;
+import com.example.springbootstage.entity.excel.ModelInfo;
+import com.example.springbootstage.excel.ExcelUtil;
 import com.example.springbootstage.service.BrandService;
 import com.example.springbootstage.service.ModelService;
 import com.example.springbootstage.service.PackageService;
+import com.example.springbootstage.utils.DateUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.util.Date;
 import java.util.Iterator;
@@ -130,7 +135,7 @@ public class ModelController {
 
     @GetMapping("/deleteFromModel")
     @WebLog(value = "删除绑定套餐")
-    public String deleteFromModel(Long modelId,Long packageId) {
+    public String deleteFromModel(Long modelId, Long packageId) {
         Model model = modelService.getById(modelId);
         List<Package> packages = model.getPackageList();
 /*        for (Package p : packages) {
@@ -148,6 +153,57 @@ public class ModelController {
         model.setPackageList(packages);
         modelService.save(model);
         return "redirect:/model/package/" + modelId;
+    }
+
+
+    /**
+     * 导出 Excel（一个 sheet）
+     */
+    @GetMapping(value = "writeExcel")
+    public void writeExcel(HttpServletResponse response) {
+        List<Model> list = modelService.getAll();
+        List<ModelInfo> list1 = new LinkedList<>();
+        ModelInfo modelInfo;
+        for (Model model : list) {
+            modelInfo = new ModelInfo();
+            modelInfo.setId(model.getId());
+            modelInfo.setBrand(model.getBrand().getName());
+            modelInfo.setModelCode(model.getModelCode());
+            modelInfo.setName(model.getName());
+            modelInfo.setPrice(model.getPrice());
+            modelInfo.setType(model.getType());
+            modelInfo.setStatus(model.getStatus());
+            list1.add(modelInfo);
+        }
+        String fileName = "机型列表" + DateUtil.format(new Date(), "yyyyMMddhhmmss");
+        String sheetName = "机型列表";
+
+        ExcelUtil.writeExcel(response, list1, fileName, sheetName, new ModelInfo());
+    }
+
+
+    /**
+     * 读取 Excel（指定某个 sheet）
+     */
+    @RequestMapping(value = "readExcel", method = RequestMethod.POST)
+    public String readExcel(MultipartFile excel, @RequestParam(defaultValue = "1") int sheetNo,
+                            @RequestParam(defaultValue = "1") int headLineNum) {
+        List<Object> list = ExcelUtil.readExcel(excel, new ModelInfo(), sheetNo, headLineNum);
+        ModelInfo modelInfo;
+        Model model;
+        for (Object o : list) {
+            modelInfo = (ModelInfo) o;
+            model = new Model();
+            model.setName(modelInfo.getName());
+            model.setPrice(modelInfo.getPrice());
+            model.setModelCode(modelInfo.getModelCode());
+            model.setStatus(modelInfo.getStatus());
+            model.setType(modelInfo.getType());
+            Brand brand = brandService.getByName(modelInfo.getBrand());
+            model.setBrand(brand);
+            modelService.save(model);
+        }
+        return "redirect:/model/";
     }
 
 

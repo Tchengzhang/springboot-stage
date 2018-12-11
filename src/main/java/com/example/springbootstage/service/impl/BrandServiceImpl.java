@@ -41,4 +41,8 @@ public class BrandServiceImpl implements BrandService {
         brandDao.deleteById(id);
     }
 
+    @Override
+    public Brand getByName(String name) {
+        return brandDao.findByName(name);
+    }
 }
