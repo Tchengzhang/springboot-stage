@@ -22,7 +22,7 @@ public class Package extends BaseRowModel {
     private String name;
     @ExcelProperty(value = {"类型"}, index = 2)
     private String type;
-    @ExcelProperty(value = {"状态"}, index = 2)
+    @ExcelProperty(value = {"状态"}, index = 3)
     private String status; //1 启用，0 停用
 
     @ManyToMany

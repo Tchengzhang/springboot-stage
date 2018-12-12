@@ -20,6 +20,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.util.Date;
 import java.util.List;
+import java.util.Objects;
 
 @Controller
 @RequestMapping("/store")
@@ -94,7 +95,7 @@ public class StoreController {
                             @RequestParam(defaultValue = "1") int headLineNum) {
         List<Object> list = ExcelUtil.readExcel(excel, new Store(), sheetNo, headLineNum);
         Store store;
-        for (Object o : list) {
+        for (Object o : Objects.requireNonNull(list)) {
             store = (Store) o;
             storeService.save(store);
         }

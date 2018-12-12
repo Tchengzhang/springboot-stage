@@ -17,6 +17,7 @@ import javax.servlet.http.HttpSession;
 import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Objects;
 
 @Controller
 @RequestMapping("/package")
@@ -91,7 +92,7 @@ public class PackageController {
                             @RequestParam(defaultValue = "1") int headLineNum) {
         List<Object> list = ExcelUtil.readExcel(excel, new Package(), sheetNo, headLineNum);
         Package p;
-        for (Object o : list) {
+        for (Object o : Objects.requireNonNull(list)) {
             p = (Package) o;
             packageService.save(p);
         }

@@ -6,7 +6,6 @@ import com.example.springbootstage.entity.Clerk;
 import com.example.springbootstage.excel.ExcelUtil;
 import com.example.springbootstage.service.StoreService;
 import com.example.springbootstage.service.ClerkService;
-import com.example.springbootstage.service.PackageService;
 import com.example.springbootstage.utils.DateUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -19,6 +18,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.util.Date;
 import java.util.List;
+import java.util.Objects;
 
 @Controller
 @RequestMapping("/clerk")
@@ -99,7 +99,7 @@ public class ClerkController {
                             @RequestParam(defaultValue = "1") int headLineNum) {
         List<Object> list = ExcelUtil.readExcel(excel, new Clerk(), sheetNo, headLineNum);
         Clerk clerk;
-        for (Object o : list) {
+        for (Object o : Objects.requireNonNull(list)) {
             clerk = (Clerk) o;
             clerkService.save(clerk);
         }

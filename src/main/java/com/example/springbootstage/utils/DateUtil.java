@@ -10,12 +10,7 @@ public class DateUtil {
 
     private static final ThreadLocal<Map<String, SimpleDateFormat>>
 
-            messageFormat =  new ThreadLocal<Map<String, SimpleDateFormat>>(){
-
-        public Map<String, SimpleDateFormat> initialValue(){
-            return new HashMap<>();
-        }
-    };
+            messageFormat = ThreadLocal.withInitial(HashMap::new);
     /**
      * 获取线程局部变量
      * @param dateFormat

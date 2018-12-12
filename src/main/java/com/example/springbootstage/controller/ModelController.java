@@ -19,10 +19,7 @@ import org.springframework.web.multipart.MultipartFile;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
-import java.util.Date;
-import java.util.Iterator;
-import java.util.LinkedList;
-import java.util.List;
+import java.util.*;
 
 @Controller
 @RequestMapping("/model")
@@ -191,7 +188,7 @@ public class ModelController {
         List<Object> list = ExcelUtil.readExcel(excel, new ModelInfo(), sheetNo, headLineNum);
         ModelInfo modelInfo;
         Model model;
-        for (Object o : list) {
+        for (Object o : Objects.requireNonNull(list)) {
             modelInfo = (ModelInfo) o;
             model = new Model();
             model.setName(modelInfo.getName());
