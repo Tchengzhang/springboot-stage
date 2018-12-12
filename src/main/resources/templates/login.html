@@ -1,16 +1,73 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<html lang="zh-CN" xmlns:th="http://www.w3.org/1999/xhtml">
 <head>
-    <meta charset="UTF-8">
-    <title>Login</title>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <title>登录</title>
+
+    <!-- Bootstrap core CSS-->
+    <link th:href="@{/vendor/bootstrap/css/bootstrap.min.css}" rel="stylesheet">
+
+    <!-- Custom fonts for this template-->
+    <link th:href="@{/vendor/fontawesome-free/css/all.min.css}" rel="stylesheet" type="text/css">
+
+    <!-- Custom styles for this template-->
+    <link th:href="@{/css/sb-admin.css}" rel="stylesheet">
+
 </head>
-<body>
-错误信息：<h4 th:text="${msg}"></h4>
-<form action="/login" method="post">
-    <p>账号：<input type="text" name="username"/></p>
-    <p>密码：<input type="text" name="password"/></p>
-    <p><input type="submit" value="登录"/></p>
-    <p><a class="btn btn-danger" th:href="@{/register}">注册</a></p>
-</form>
+
+<body class="bg-dark">
+
+<div class="container">
+    <div class="card card-login mx-auto mt-5">
+        <div class="card-header">登录</div>
+        <span th:text="${msg}" ></span>
+        <div class="card-body">
+            <form action="/login" method="post">
+                <div class="form-group">
+                    <div class="form-label-group">
+                        <input type="text" id="username" class="form-control" placeholder="Username"
+                               required="required" autofocus="autofocus" name="username">
+                        <label for="username">用户名</label>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="form-label-group">
+                        <input type="password" id="inputPassword" class="form-control" placeholder="Password"
+                               required="required" name="password">
+                        <label for="inputPassword">密码</label>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="checkbox">
+                        <label>
+                            <input type="checkbox" value="remember-me">
+                            记住登录
+                        </label>
+                    </div>
+                </div>
+                <!-- <a class="btn btn-primary btn-block" href="index.html">登录</a> -->
+                <input class="btn btn-primary btn-block" type="submit" value="登录"/>
+            </form>
+            <div class="text-center">
+                <a class="d-block small mt-3" href="register.html">注册</a>
+                <a class="d-block small" href="forgot-password.html">忘记密码?</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Bootstrap core JavaScript-->
+<script th:src="@{/vendor/jquery/jquery.min.js}"></script>
+<script th:src="@{/vendor/bootstrap/js/bootstrap.bundle.min.js}"></script>
+
+<!-- Core plugin JavaScript-->
+<script th:src="@{/vendor/jquery-easing/jquery.easing.min.js}"></script>
+
 </body>
+
 </html>

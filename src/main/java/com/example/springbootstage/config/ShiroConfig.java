@@ -1,5 +1,6 @@
 package com.example.springbootstage.config;
 
+import com.example.springbootstage.filter.MyFormAuthenticationFilter;
 import org.apache.shiro.authc.credential.HashedCredentialsMatcher;
 import org.apache.shiro.mgt.SecurityManager;
 import org.apache.shiro.spring.security.interceptor.AuthorizationAttributeSourceAdvisor;
@@ -9,6 +10,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.handler.SimpleMappingExceptionResolver;
 
+import javax.servlet.Filter;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Properties;
@@ -23,7 +25,14 @@ public class ShiroConfig {
         //拦截器.
         Map<String, String> filterChainDefinitionMap = new LinkedHashMap<String, String>();
         // 配置不会被拦截的链接 顺序判断
+        //放开静态资源访问
         filterChainDefinitionMap.put("/static/**", "anon");
+        filterChainDefinitionMap.put("/image/**", "anon");//img
+        filterChainDefinitionMap.put("/css/**", "anon");//css
+        filterChainDefinitionMap.put("/scss/**", "anon");//css
+        filterChainDefinitionMap.put("/js/**", "anon");//js
+        filterChainDefinitionMap.put("/vendor/**", "anon");//js
+        //放开注册
         filterChainDefinitionMap.put("/register", "anon");
         //放行swagger2
         filterChainDefinitionMap.put("/swagger-ui.html", "anon");
@@ -35,6 +44,10 @@ public class ShiroConfig {
         //<!-- 过滤链定义，从上向下顺序执行，一般将/**放在最为下边 -->:这是一个坑呢，一不小心代码就不好使了;
         //<!-- authc:所有url都必须认证通过才可以访问; anon:所有url都都可以匿名访问-->
         filterChainDefinitionMap.put("/**", "authc");
+        //解决登录成功后无法跳转到successUrl的问题
+        Map<String, Filter> map = new LinkedHashMap<>();
+        map.put("authc", new MyFormAuthenticationFilter());
+        shiroFilterFactoryBean.setFilters(map);
         // 如果不设置默认会自动寻找Web工程根目录下的"/login.jsp"页面
         shiroFilterFactoryBean.setLoginUrl("/login");
         // 登录成功后要跳转的链接
