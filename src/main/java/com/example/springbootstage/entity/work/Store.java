@@ -4,12 +4,16 @@ import com.alibaba.excel.annotation.ExcelProperty;
 import com.alibaba.excel.metadata.BaseRowModel;
 import com.example.springbootstage.entity.BaseEntity;
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.google.common.collect.Sets;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
 import javax.persistence.*;
 import java.util.Date;
 import java.util.List;
+import java.util.Set;
+
 @EqualsAndHashCode(callSuper = true)
 @Entity
 @Data
@@ -31,17 +35,19 @@ public class Store extends BaseEntity {
     private String latitude;
     @ExcelProperty(value = {"区域编码"}, index = 8)
     private String zoneCode;
-    @ExcelProperty(value = {"状态"}, index = 9)
-    private String status;
 
-    @ManyToMany
+/*    @ManyToMany
     @JoinTable(name = "ModelStore", joinColumns = {@JoinColumn(name = "sid")}, inverseJoinColumns = {@JoinColumn(name = "mid")})
-    private List<Model> modelList;
+    private Set<Model> modelList = Sets.newLinkedHashSet();
 
+    @Transient
+    private Set<String> modelIds = Sets.newLinkedHashSet();*/
     @ManyToMany
     @JoinTable(name = "StorePackage", joinColumns = {@JoinColumn(name = "sid")}, inverseJoinColumns = {@JoinColumn(name = "pid")})
-    private List<Package> packageList;
+    private Set<Package> packageList = Sets.newLinkedHashSet();
 
+    @Transient
+    private Set<String> packageIds = Sets.newLinkedHashSet();
 
 
 }

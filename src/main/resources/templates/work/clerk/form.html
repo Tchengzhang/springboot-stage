@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/web/thymeleaf/layout"
+      layout:decorator="layout/layout">
+<head>
+    <meta charset="UTF-8">
+</head>
+<body class="app sidebar-mini rtl">
+<main class="app-content" layout:fragment="content">
+    <div class="app-title">
+        <div>
+            <h1><i class="fa fa-user-circle-o"></i> 店员
+                <span th:text="新增" th:if="${entity.id == null}"/>
+                <span th:text="编辑" th:if="${entity.id != null}"/>
+            </h1>
+        </div>
+        <ul class="app-breadcrumb breadcrumb">
+            <li class="breadcrumb-item"><i class="fa fa-home fa-lg"></i></li>
+            <li class="breadcrumb-item"><a href="#">店员列表</a></li>
+            <li class="breadcrumb-item"><a href="#">
+                <span th:text="新增" th:if="${entity.id == null}"/>
+                <span th:text="编辑" th:if="${entity.id != null}"/>
+            </a></li>
+        </ul>
+    </div>
+    <div class="row">
+        <div class="col-md-12">
+            <div class="tile">
+                <form th:action="@{/clerk/save}" method="post" id="inputForm">
+                    <input name="id" type="hidden" th:value="${entity.id}"/>
+                    <div class="row">
+
+                        <div class="col-lg-6">
+                            <div class="form-group">
+                                <fieldset>
+                                    <label class="control-label" for="clerk_store">门店</label>
+                                    <div class="col-xs-4">
+                                        <select class="form-control select2" id="clerk_store" name="store"
+                                                th:value="${entity.store} == null? ${entity.store.name}:''">
+                                            <option>请选择门店</option>
+                                            <option th:each="e : ${list}"
+                                                    th:value="${e.id}"
+                                                    th:text="${e.name}"
+                                                    th:selected="${e.id  eq entity.store.id}">
+                                            </option>
+                                        </select>
+                                    </div>
+                                </fieldset>
+                            </div>
+
+                            <div class="form-group">
+                                <fieldset>
+                                    <label for="clerk_name" class="control-label">名称</label>
+                                    <div class="col-xs-4">
+                                        <input type="text" class="form-control" id="clerk_name" name="name"
+                                               th:value="${entity.name}"/>
+                                    </div>
+                                </fieldset>
+                            </div>
+
+                            <div class="form-group">
+                                <fieldset>
+                                    <label for="clerk_gender" class="col-sm-2 control-label">性别</label>
+                                    <div class="col-xs-4">
+                                        <input type="text" class="form-control" id="clerk_gender" name="gender"
+                                               th:value="${entity.gender}"/>
+                                    </div>
+                                </fieldset>
+                            </div>
+                            <div class="form-group">
+                                <fieldset>
+                                    <label for="clerk_phone" class="col-sm-2 control-label">电话号码</label>
+                                    <div class="col-xs-4">
+                                        <input type="text" class="form-control" id="clerk_phone" name="phone"
+                                               th:value="${entity.phone}"/>
+                                    </div>
+                                </fieldset>
+                            </div>
+
+                        </div>
+                    </div>
+                    <div class="tile-footer">
+                        <button class="btn btn-primary" type="submit">提交</button>
+                        <button class="btn" type="button" onclick="history.back(-1);">取消</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</main>
+</body>
+</html>

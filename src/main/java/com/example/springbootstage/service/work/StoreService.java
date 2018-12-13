@@ -1,6 +1,9 @@
 package com.example.springbootstage.service.work;
 
+import com.example.springbootstage.dao.work.ModelDao;
+import com.example.springbootstage.dao.work.PackageDao;
 import com.example.springbootstage.dao.work.StoreDao;
+import com.example.springbootstage.entity.work.Model;
 import com.example.springbootstage.entity.work.Store;
 import com.example.springbootstage.service.BaseService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,9 +19,16 @@ public class StoreService implements BaseService<Store> {
     @Autowired
     private StoreDao storeDao;
 
+    @Autowired
+    private PackageDao packageDao;
+
     @Override
-    public Store save(Store store) {
-        return storeDao.save(store);
+    public Store save(Store entity) {
+        entity.getPackageList().clear();
+        for (String id : entity.getPackageIds()) {
+            entity.getPackageList().add(packageDao.findById(Long.valueOf(id)).get());
+        }
+        return storeDao.save(entity);
     }
 
     @Override

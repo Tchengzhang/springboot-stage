@@ -32,9 +32,9 @@ public class ShiroConfig {
         filterChainDefinitionMap.put("/static/**", "anon");
         filterChainDefinitionMap.put("/image/**", "anon");//img
         filterChainDefinitionMap.put("/css/**", "anon");//css
-        filterChainDefinitionMap.put("/scss/**", "anon");//css
+        //filterChainDefinitionMap.put("/scss/**", "anon");//css
         filterChainDefinitionMap.put("/js/**", "anon");//js
-        filterChainDefinitionMap.put("/vendor/**", "anon");//js
+        //filterChainDefinitionMap.put("/vendor/**", "anon");//js
         //放开注册
         filterChainDefinitionMap.put("/register", "anon");
         //放行swagger2

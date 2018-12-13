@@ -15,6 +15,7 @@ import java.util.Date;
 @Data
 public class Clerk extends BaseEntity {
 
+    private int state = 0;
     @ExcelProperty(value = {"姓名"}, index = 1)
     private String name;
     @ExcelProperty(value = {"电话号码"}, index = 2)

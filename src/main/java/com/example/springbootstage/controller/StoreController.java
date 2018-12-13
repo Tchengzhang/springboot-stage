@@ -3,8 +3,12 @@ package com.example.springbootstage.controller;
 import com.example.springbootstage.annotation.WebLog;
 import com.example.springbootstage.entity.work.Store;
 import com.example.springbootstage.excel.ExcelUtil;
+import com.example.springbootstage.service.work.ModelService;
+import com.example.springbootstage.service.work.PackageService;
 import com.example.springbootstage.service.work.StoreService;
 import com.example.springbootstage.utils.DateUtil;
+import com.google.common.collect.Sets;
+import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
@@ -13,6 +17,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.validation.Valid;
 import java.util.Date;
 import java.util.List;
 import java.util.Objects;
@@ -23,48 +28,48 @@ public class StoreController {
 
     @Autowired
     private StoreService storeService;
+    @Autowired
+    private PackageService packageService;
 
     @GetMapping
     @WebLog(value = "跳转门店列表页")
+    @RequiresPermissions("work_user:view")
     public String getStoreList(ModelMap map) {
-        map.addAttribute("storeList", storeService.getAll());
-        return "storeList";
+        map.addAttribute("list", storeService.getAll());
+        return "work/store/list";
     }
 
-    @GetMapping("/create")
+    @GetMapping("/add")
     @WebLog(value = "跳转门店页")
+    @RequiresPermissions("work_user:create")
     public String createForm(ModelMap map) {
         Store store = new Store();
-        map.addAttribute("store", store);
-        map.addAttribute("action", "save");
-        return "storeForm";
+        map.addAttribute("entity", store);
+        map.addAttribute("packages", packageService.getAll());
+        return "work/store/form";
 
     }
 
-    @PostMapping({"/save", "/update"})
+    @PostMapping("/save")
     @WebLog(value = "插入或修改门店信息")
-    public String save(@ModelAttribute Store store, HttpServletRequest request) {
-        String url = request.getRequestURI();
-        if (url.contains("save")) {
-            store.setCreateTime(new Date());
-        } else {
-            store.setUpdateTime(new Date());
-        }
+    public String save(@Valid @ModelAttribute("entity") Store store, HttpServletRequest request) {
         storeService.save(store);
         return "redirect:/store/";
     }
 
-    @GetMapping("/update/{id}")
+    @GetMapping("/edit/{id}")
     @WebLog(value = "跳转修改门店页")
+    @RequiresPermissions("work_user:edit")
     public String getStoreForm(@PathVariable Long id, ModelMap map) {
-        map.addAttribute("store", storeService.getById(id));
-        map.addAttribute("action", "update");
-        return "storeForm";
+        map.addAttribute("entity", storeService.getById(id));
+        map.addAttribute("packages", packageService.getAll());
+        return "work/store/form";
     }
 
-    @GetMapping("/delete/{id}")
+    @PostMapping("/delete")
     @WebLog(value = "删除门店")
-    public String deleteStore(@PathVariable Long id) {
+    @RequiresPermissions("work_user:delete")
+    public String deleteStore(Long id) {
         storeService.delById(id);
         return "redirect:/store/";
     }

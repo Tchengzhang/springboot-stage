@@ -10,6 +10,9 @@ import com.example.springbootstage.service.work.BrandService;
 import com.example.springbootstage.service.work.ModelService;
 import com.example.springbootstage.service.work.PackageService;
 import com.example.springbootstage.utils.DateUtil;
+import com.google.common.collect.Sets;
+import net.sf.ehcache.util.SetAsList;
+import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
@@ -19,6 +22,7 @@ import org.springframework.web.multipart.MultipartFile;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import javax.validation.Valid;
 import java.util.*;
 
 @Controller
@@ -36,48 +40,47 @@ public class ModelController {
 
     @GetMapping
     @WebLog(value = "跳转机型列表页")
+    @RequiresPermissions("work_user:view")
     public String getModelList(ModelMap map) {
-        map.addAttribute("modelList", modelService.getAll());
-        return "modelList";
+        map.addAttribute("list", modelService.getAll());
+        return "work/model/list";
     }
 
-    @GetMapping("/create")
+    @GetMapping("/add")
     @WebLog(value = "跳转机型页")
+    @RequiresPermissions("work_user:create")
     public String createForm(ModelMap map, HttpSession session) {
         Model model = new Model();
         model.setBrand(new Brand()); //此处必须为brand赋值，不然会报错
-        map.addAttribute("model", model);
-        map.addAttribute("brandList", brandService.getAll());
-        map.addAttribute("action", "save");
-        return "modelForm";
+        model.setPackageList(Sets.newLinkedHashSet());
+        map.addAttribute("entity", model);
+        map.addAttribute("list", brandService.getAll());
+        map.addAttribute("packages", packageService.getAll());
+        return "work/model/form";
 
     }
 
-    @PostMapping({"/save", "/update"})
-    @WebLog(value = "插入或修改机型信息")
-    public String save(@ModelAttribute Model model, HttpServletRequest request) {
-        String url = request.getRequestURI();
-        if (url.contains("save")) {
-            model.setCreateTime(new Date());
-        } else {
-            model.setUpdateTime(new Date());
-        }
+    @PostMapping("/save")
+    @WebLog(value = "存储机型信息")
+    public String save(@Valid @ModelAttribute("entity") Model model, HttpServletRequest request) {
         modelService.save(model);
         return "redirect:/model/";
     }
 
-    @GetMapping("/update/{id}")
+    @GetMapping("/edit/{id}")
     @WebLog(value = "跳转修改机型页")
+    @RequiresPermissions("work_user:edit")
     public String getModelForm(@PathVariable Long id, ModelMap map) {
-        map.addAttribute("model", modelService.getById(id));
-        map.addAttribute("action", "update");
-        map.addAttribute("brandList", brandService.getAll());
-        return "modelForm";
+        map.addAttribute("entity", modelService.getById(id));
+        map.addAttribute("list", brandService.getAll());
+        map.addAttribute("packages", packageService.getAll());
+        return "work/model/form";
     }
 
-    @GetMapping("/delete/{id}")
+    @PostMapping("/delete")
     @WebLog(value = "删除机型")
-    public String deleteModel(@PathVariable Long id) {
+    @RequiresPermissions("work_user:delete")
+    public String deleteModel(Long id) {
         modelService.delById(id);
         return "redirect:/model/";
     }
@@ -87,9 +90,9 @@ public class ModelController {
     @WebLog(value = "进入套餐绑定页面")
     public String goPackages(@PathVariable Long id, ModelMap map) {
         Model model = modelService.getById(id);
-        List<Package> packageList = model.getPackageList();
+        Set<Package> packageList = model.getPackageList();
         if (packageList == null) {
-            packageList = new LinkedList<>();
+            packageList = Sets.newLinkedHashSet();
             model.setPackageList(packageList);
         }
         map.addAttribute("model", model);
@@ -117,7 +120,7 @@ public class ModelController {
     @WebLog(value = "添加绑定套餐")
     public String addPackageToModel(String[] id, String modelId) {
         Model model = modelService.getById(Long.valueOf(modelId));
-        List<Package> packages = model.getPackageList();
+        Set<Package> packages = model.getPackageList();
         for (String idd : id) {
             Package p = packageService.getById(Long.valueOf(idd));
             if (!packages.contains(p)) {
@@ -134,7 +137,7 @@ public class ModelController {
     @WebLog(value = "删除绑定套餐")
     public String deleteFromModel(Long modelId, Long packageId) {
         Model model = modelService.getById(modelId);
-        List<Package> packages = model.getPackageList();
+        Set<Package> packages = model.getPackageList();
 /*        for (Package p : packages) {
             if (p.getId().equals(packageId)) {
                 packages.remove(p);
@@ -169,7 +172,6 @@ public class ModelController {
             modelInfo.setName(model.getName());
             modelInfo.setPrice(model.getPrice());
             modelInfo.setType(model.getType());
-            modelInfo.setStatus(model.getStatus());
             list1.add(modelInfo);
         }
         String fileName = "机型列表" + DateUtil.format(new Date(), "yyyyMMddhhmmss");
@@ -194,7 +196,6 @@ public class ModelController {
             model.setName(modelInfo.getName());
             model.setPrice(modelInfo.getPrice());
             model.setModelCode(modelInfo.getModelCode());
-            model.setStatus(modelInfo.getStatus());
             model.setType(modelInfo.getType());
             Brand brand = brandService.getByName(modelInfo.getBrand());
             model.setBrand(brand);

@@ -7,6 +7,7 @@ import com.example.springbootstage.excel.ExcelUtil;
 import com.example.springbootstage.service.work.ClerkService;
 import com.example.springbootstage.service.work.StoreService;
 import com.example.springbootstage.utils.DateUtil;
+import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
@@ -16,6 +17,7 @@ import org.springframework.web.multipart.MultipartFile;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import javax.validation.Valid;
 import java.util.Date;
 import java.util.List;
 import java.util.Objects;
@@ -32,47 +34,43 @@ public class ClerkController {
 
     @GetMapping
     @WebLog(value = "跳转店员列表页")
+    @RequiresPermissions("work_user:view")
     public String getClerkList(ModelMap map) {
-        map.addAttribute("clerkList", clerkService.getAll());
-        return "clerkList";
+        map.addAttribute("list", clerkService.getAll());
+        return "work/clerk/list";
     }
 
-    @GetMapping("/create")
+    @GetMapping("/add")
     @WebLog(value = "跳转店员页")
+    @RequiresPermissions("work_user:create")
     public String createForm(ModelMap map, HttpSession session) {
         Clerk clerk = new Clerk();
         clerk.setStore(new Store()); //此处必须为store赋值，不然会报错
-        map.addAttribute("clerk", clerk);
-        map.addAttribute("storeList", storeService.getAll());
-        map.addAttribute("action", "save");
-        return "clerkForm";
+        map.addAttribute("entity", clerk);
+        map.addAttribute("list", storeService.getAll());
+        return "work/clerk/form";
 
     }
 
-    @PostMapping({"/save", "/update"})
+    @PostMapping("/save")
     @WebLog(value = "插入或修改店员信息")
-    public String save(@ModelAttribute Clerk clerk, HttpServletRequest request) {
-        String url = request.getRequestURI();
-        if (url.contains("save")) {
-            clerk.setCreateTime(new Date());
-        } else {
-            clerk.setUpdateTime(new Date());
-        }
+    public String save(@Valid @ModelAttribute Clerk clerk, HttpServletRequest request) {
         clerkService.save(clerk);
         return "redirect:/clerk/";
     }
 
-    @GetMapping("/update/{id}")
+    @GetMapping("/edit/{id}")
     @WebLog(value = "跳转修改店员页")
+    @RequiresPermissions("work_user:edit")
     public String getClerkForm(@PathVariable Long id, ModelMap map) {
-        map.addAttribute("clerk", clerkService.getById(id));
-        map.addAttribute("action", "update");
-        map.addAttribute("storeList", storeService.getAll());
-        return "clerkForm";
+        map.addAttribute("entity", clerkService.getById(id));
+        map.addAttribute("list", storeService.getAll());
+        return "work/clerk/form";
     }
 
-    @GetMapping("/delete/{id}")
+    @PostMapping("/delete")
     @WebLog(value = "删除店员")
+    @RequiresPermissions("work_user:delete")
     public String deleteClerk(@PathVariable Long id) {
         clerkService.delById(id);
         return "redirect:/clerk/";

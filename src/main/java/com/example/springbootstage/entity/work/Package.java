@@ -19,13 +19,13 @@ public class Package extends BaseEntity {
     @ExcelProperty(value = {"状态"}, index = 3)
     private String status; //1 启用，0 停用
 
-    @ManyToMany
+/*    @ManyToMany
     @JoinTable(name = "ModelPackage", joinColumns = {@JoinColumn(name = "pid")}, inverseJoinColumns = {@JoinColumn(name = "mid")})
-    private List<Model> modelList;
+    private List<Model> modelList;*/
 
-    @ManyToMany
+/*    @ManyToMany
     @JoinTable(name = "StorePackage", joinColumns = {@JoinColumn(name = "pid")}, inverseJoinColumns = {@JoinColumn(name = "sid")})
-    private List<Store> storeList;
+    private List<Store> storeList;*/
 
 
 }

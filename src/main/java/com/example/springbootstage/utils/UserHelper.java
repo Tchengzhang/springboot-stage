@@ -1,6 +1,7 @@
 package com.example.springbootstage.utils;
 
 
+import com.example.springbootstage.entity.system.User;
 import org.apache.shiro.SecurityUtils;
 
 /**
@@ -12,7 +13,11 @@ public class UserHelper {
      * 获取当前登录用户信息.
      */
     public static String getCurrentUser() {
-        return (String)SecurityUtils.getSubject().getPrincipal();
+        User user = (User) SecurityUtils.getSubject().getPrincipal();
+        if (user == null) {
+            return "";
+        }
+        return user.getUsername();
     }
 
 }

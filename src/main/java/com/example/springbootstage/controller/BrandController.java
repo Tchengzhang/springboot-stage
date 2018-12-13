@@ -5,6 +5,7 @@ import com.example.springbootstage.entity.work.Brand;
 import com.example.springbootstage.excel.ExcelUtil;
 import com.example.springbootstage.service.work.BrandService;
 import com.example.springbootstage.utils.DateUtil;
+import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
@@ -25,44 +26,41 @@ public class BrandController {
 
     @GetMapping
     @WebLog(value = "跳转品牌列表页")
+    @RequiresPermissions("work_user:view")
     public String getBrandList(ModelMap map) {
-        map.addAttribute("brandList", brandService.getAll());
-        return "brandList";
+        map.addAttribute("list", brandService.getAll());
+        return "work/brand/list";
     }
 
-    @GetMapping("/create")
-    @WebLog(value = "跳转品牌页")
+    @GetMapping("/add")
+    @WebLog(value = "新增")
+    @RequiresPermissions("work_user:create")
     public String createForm(ModelMap map) {
-        map.addAttribute("brand", new Brand());
-        map.addAttribute("action", "save");
-        return "brandForm";
+        map.addAttribute("entity", new Brand());
+
+        return "work/brand/form";
 
     }
 
-    @PostMapping({"/save", "/update"})
-    @WebLog(value = "插入或修改品牌信息")
+    @PostMapping(value = "/save")
+    @WebLog(value = "保存品牌信息")
     public String save(@ModelAttribute Brand brand, HttpServletRequest request) {
-        String url = request.getRequestURI();
-        if (url.contains("save")) {
-            brand.setCreateTime(new Date());
-        } else {
-            brand.setUpdateTime(new Date());
-        }
         brandService.save(brand);
         return "redirect:/brand/";
     }
 
-    @GetMapping("/update/{id}")
+    @GetMapping("/edit/{id}")
     @WebLog(value = "跳转修改品牌页")
+    @RequiresPermissions("work_user:edit")
     public String getBrandForm(@PathVariable Long id, ModelMap map) {
-        map.addAttribute("brand", brandService.getById(id));
-        map.addAttribute("action", "update");
-        return "brandForm";
+        map.addAttribute("entity", brandService.getById(id));
+        return "work/brand/form";
     }
 
-    @GetMapping("/delete/{id}")
+    @PostMapping("/delete")
     @WebLog(value = "删除品牌")
-    public String deleteBrand(@PathVariable Long id) {
+    @RequiresPermissions("work_user:delete")
+    public String deleteBrand(Long id) {
         brandService.delById(id);
         return "redirect:/brand/";
     }

@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/web/thymeleaf/layout" layout:decorator="layout/layout" xmlns:shiro="http://www.pollix.at/thymeleaf/shiro">
+<head>
+</head>
+<body class="app sidebar-mini rtl">
+<main class="app-content" layout:fragment="content">
+    <div class="app-title">
+        <div>
+            <h1><i class="fa fa-user-circle-o"></i> 门店列表</h1>
+        </div>
+        <ul class="app-breadcrumb breadcrumb">
+            <li class="breadcrumb-item"><i class="fa fa-home fa-lg"></i></li>
+            <li class="breadcrumb-item"><a href="#">门店列表</a></li>
+        </ul>
+    </div>
+    <div class="row">
+        <div class="col-md-12">
+            <div class="tile">
+                <div class="tile-body">
+                    <div class="row button_div" style="margin-bottom: 10px;">
+                        <p shiro:hasPermission = "work_user:create"><a class="btn btn-primary icon-btn" th:href="@{/store/add}"><i class="fa fa-plus"></i>新增</a></p>
+                        <form th:action="@{/store}" id="searchForm" method="post">
+                        </form>
+                    </div>
+                    <div class="row">
+                        <table class="table table-hover table-bordered" id="sampleTable">
+                            <thead>
+                            <tr>
+                                <th>名称</th>
+                                <th>省</th>
+                                <th>市</th>
+                                <th>区</th>
+                                <th>具体地址</th>
+                                <th>经度</th>
+                                <th>纬度</th>
+                                <th>区域编码</th>
+                                <th>操作</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr th:each="e:${list}">
+                                <td th:text="${e.name}"></td>
+                                <td th:text="${e.province}"></td>
+                                <td th:text="${e.city}"></td>
+                                <td th:text="${e.district}"></td>
+                                <td th:text="${e.detail}"></td>
+                                <td th:text="${e.longitude}"></td>
+                                <td th:text="${e.latitude}"></td>
+                                <td th:text="${e.zoneCode}"></td>
+                                <td>
+                                    <div class="btn-group">
+                                        <a class="btn btn-primary" th:href="@{'/store/edit/' + ${e.id}}" shiro:hasPermission = "work_user:edit"><i class="fa fa-lg fa-edit"></i></a>
+                                        <a class="btn btn-primary" href="#delete" th:onclick="'javascript:del(\''+${e.id}+'\');'" shiro:hasPermission = "work_user:delete"><i class="fa fa-lg fa-trash"></i></a>
+                                    </div>
+                                </td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script th:inline="javascript" type="text/javascript">
+    /*<![CDATA[*/
+    let msg = /*[[${message}]]*/;
+    /*]]>*/
+    if(msg != null){
+        alert(msg);
+    }
+    function del(id){
+        layer.confirm('确定删除?', function(){
+            $('#searchForm').attr('action', '/store/delete');
+            $('#searchForm').append('<input name="id" value="' + id + '" type="hidden"/>');
+            $('#searchForm').submit();
+            layer.closeAll();
+        }, function(){
+            layer.closeAll();
+        })
+    }
+    </script>
+</main>
+</body>
+</html>
