@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.w3.org/1999/xhtml">
+<head>
+    <meta name="description" content="Vali is a responsive and free admin theme built with Bootstrap 4, SASS and PUG.js. It's fully customizable and modular.">
+    <!-- Twitter meta-->
+    <meta property="twitter:card" content="summary_large_image">
+    <meta property="twitter:site" content="@pratikborsadiya">
+    <meta property="twitter:creator" content="@pratikborsadiya">
+    <!-- Open Graph Meta-->
+    <meta property="og:type" content="website">
+    <meta property="og:site_name" content="Vali Admin">
+    <meta property="og:title" content="Vali - Free Bootstrap 4 admin theme">
+    <meta property="og:url" content="http://pratikborsadiya.in/blog/vali-admin">
+    <meta property="og:image" content="http://pratikborsadiya.in/blog/vali-admin/hero-social.png">
+    <meta property="og:description" content="Vali is a responsive and free admin theme built with Bootstrap 4, SASS and PUG.js. It's fully customizable and modular.">
+    <title>管理平台</title>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- Main CSS-->
+    <link rel="stylesheet" type="text/css" th:href="@{/css/main.css}">
+    <!-- Font-icon css-->
+    <link rel="stylesheet" type="text/css" th:href="@{https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css}">
+    <script th:src="@{/js/jquery-3.2.1.min.js}"></script>
+    <script type="text/javascript" th:src="@{/js/jquery.validate.min.js}"></script>
+</head>
+<body class="app sidebar-mini rtl">
+    <!-- Navbar-->
+    <header class="app-header" th:include="common/header :: header"></header>
+    <!-- Sidebar menu-->
+    <div class="app-sidebar__overlay" data-toggle="sidebar"></div>
+    <aside class="app-sidebar" th:include="common/menu :: menu"></aside>
+    <main layout:fragment="content"></main>
+<!-- Essential javascripts for application to work-->
+<script th:src="@{/js/popper.min.js}"></script>
+<script th:src="@{/js/bootstrap.min.js}"></script>
+<script th:src="@{/js/main.js}"></script>
+<!-- The javascript plugin to display page loading on top-->
+<script th:src="@{/js/plugins/pace.min.js}"></script>
+<!-- Page specific javascripts-->
+<script type="text/javascript" th:src="@{/js/plugins/chart.js}"></script>
+<!-- Google analytics script-->
+<script type="text/javascript" th:src="@{/js/plugins/jquery.dataTables.min.js}"></script>
+<script type="text/javascript" th:src="@{/js/plugins/dataTables.bootstrap.min.js}"></script>
+<script type="text/javascript" th:src="@{/js/layer-v3.1.1/layer.js}"></script>
+<script>
+
+    $(function(){
+        $('#sampleTable').DataTable({
+            "language": {
+                "sProcessing":   "处理中...",
+                "sLengthMenu":   "显示 _MENU_ 项结果",
+                "sZeroRecords":  "没有匹配结果",
+                "sInfo":         "显示第 _START_ 至 _END_ 项结果，共 _TOTAL_ 项",
+                "sInfoEmpty":    "显示第 0 至 0 项结果，共 0 项",
+                "sInfoFiltered": "(由 _MAX_ 项结果过滤)",
+                "sInfoPostFix":  "",
+                "sSearch":       "搜索:",
+                "sUrl":          "",
+                "sEmptyTable":     "表中数据为空",
+                "sLoadingRecords": "载入中...",
+                "sInfoThousands":  ",",
+                "oPaginate": {
+                    "sFirst":    "首页",
+                    "sPrevious": "上页",
+                    "sNext":     "下页",
+                    "sLast":     "末页"
+                },
+                "oAria": {
+                    "sSortAscending":  ": 以升序排列此列",
+                    "sSortDescending": ": 以降序排列此列"
+                }
+            }
+        });
+
+        let menuId = $('input[name="menuId"]').val();
+        $('.treeview-item').removeClass('active');
+        $('.treeview').removeClass('is-expanded');
+        if(typeof(menuId) != 'undefined' && menuId != ''){
+            let item_id = menuId + '_item';
+            $('#' + item_id).addClass('active');
+            $('#' + item_id).parent().parent().parent().addClass('is-expanded');
+        }else{
+            $('#home_item').addClass('active');
+        }
+    })
+</script>
+</body>
+</html>

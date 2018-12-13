@@ -1,8 +1,8 @@
 package com.example.springbootstage.controller;
 
 
-import com.example.springbootstage.entity.ExportInfo;
-import com.example.springbootstage.entity.ImportInfo;
+import com.example.springbootstage.entity.excel.ExportInfo;
+import com.example.springbootstage.entity.excel.ImportInfo;
 import com.example.springbootstage.excel.ExcelUtil;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;

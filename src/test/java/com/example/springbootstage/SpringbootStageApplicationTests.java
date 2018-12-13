@@ -1,5 +1,8 @@
 package com.example.springbootstage;
 
+import org.apache.coyote.http2.ByteUtil;
+import org.apache.shiro.crypto.hash.SimpleHash;
+import org.apache.shiro.util.ByteSource;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -25,6 +28,16 @@ public class SpringbootStageApplicationTests {
     @Before
     public void setMockMvc(){
         mockMvc = MockMvcBuilders.webAppContextSetup(webApplicationContext).build();
+    }
+
+    @Test
+    public void test(){
+        String password = "123456";
+        String name = "admin";
+        String salt = "0502833dc6fa41a2ab3875f74121b026";
+        ByteSource byteSource = ByteSource.Util.bytes(name + salt);
+        Object obj = new SimpleHash("MD5", password, byteSource, 2);
+        System.out.println("===================================="+obj.toString());
     }
 
 

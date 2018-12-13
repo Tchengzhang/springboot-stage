@@ -1,73 +1,76 @@
 <!DOCTYPE html>
-<html lang="zh-CN" xmlns:th="http://www.w3.org/1999/xhtml">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <meta name="description" content="">
-    <meta name="author" content="">
-
-    <title>登录</title>
-
-    <!-- Bootstrap core CSS-->
-    <link th:href="@{/vendor/bootstrap/css/bootstrap.min.css}" rel="stylesheet">
-
-    <!-- Custom fonts for this template-->
-    <link th:href="@{/vendor/fontawesome-free/css/all.min.css}" rel="stylesheet" type="text/css">
-
-    <!-- Custom styles for this template-->
-    <link th:href="@{/css/sb-admin.css}" rel="stylesheet">
-
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- Main CSS-->
+    <link rel="stylesheet" type="text/css" th:href="@{/css/main.css}">
+    <!-- Font-icon css-->
+    <link rel="stylesheet" type="text/css" th:href="@{https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css}">
+    <title>登录-数据盒子</title>
 </head>
-
-<body class="bg-dark">
-
-<div class="container">
-    <div class="card card-login mx-auto mt-5">
-        <div class="card-header">登录</div>
-        <span th:text="${msg}" ></span>
-        <div class="card-body">
-            <form action="/login" method="post">
-                <div class="form-group">
-                    <div class="form-label-group">
-                        <input type="text" id="username" class="form-control" placeholder="Username"
-                               required="required" autofocus="autofocus" name="username">
-                        <label for="username">用户名</label>
-                    </div>
-                </div>
-                <div class="form-group">
-                    <div class="form-label-group">
-                        <input type="password" id="inputPassword" class="form-control" placeholder="Password"
-                               required="required" name="password">
-                        <label for="inputPassword">密码</label>
-                    </div>
-                </div>
-                <div class="form-group">
-                    <div class="checkbox">
+<body>
+<section class="material-half-bg">
+    <div class="cover"></div>
+</section>
+<section class="login-content">
+    <div class="logo">
+        <h1>Vali</h1>
+    </div>
+    <div class="login-box">
+        <form class="login-form" th:action="@{/login}" th:method="POST">
+            <h3 class="login-head"><i class="fa fa-lg fa-fw fa-user"></i>登录</h3>
+            <div class="form-group">
+                <label class="control-label">账号<span th:text="${message}" style="color: red; margin-left: 10px;"/></label>
+                <input class="form-control" type="text" placeholder="账号" autofocus name="username" />
+            </div>
+            <div class="form-group">
+                <label class="control-label">密码</label>
+                <input class="form-control" type="password" placeholder="密码" name="password" />
+            </div>
+            <div class="form-group">
+                <div class="utility">
+                    <div class="animated-checkbox">
                         <label>
-                            <input type="checkbox" value="remember-me">
-                            记住登录
+                            <input type="checkbox"><span class="label-text">记住我</span>
                         </label>
                     </div>
+                    <p class="semibold-text mb-2"><a href="#" data-toggle="flip">忘记密码 ?</a></p>
                 </div>
-                <!-- <a class="btn btn-primary btn-block" href="index.html">登录</a> -->
-                <input class="btn btn-primary btn-block" type="submit" value="登录"/>
-            </form>
-            <div class="text-center">
-                <a class="d-block small mt-3" href="register.html">注册</a>
-                <a class="d-block small" href="forgot-password.html">忘记密码?</a>
             </div>
-        </div>
+            <div class="form-group btn-container">
+                <button class="btn btn-primary btn-block"><i class="fa fa-sign-in fa-lg fa-fw"></i>登录</button>
+            </div>
+        </form>
+        <form class="forget-form" action="index.html">
+            <h3 class="login-head"><i class="fa fa-lg fa-fw fa-lock"></i>忘记密码 ?</h3>
+            <div class="form-group">
+                <label class="control-label">账号</label>
+                <input class="form-control" type="text" placeholder="账号">
+            </div>
+            <div class="form-group btn-container">
+                <button class="btn btn-primary btn-block"><i class="fa fa-unlock fa-lg fa-fw"></i>重置</button>
+            </div>
+            <div class="form-group mt-3">
+                <p class="semibold-text mb-0"><a href="#" data-toggle="flip"><i class="fa fa-angle-left fa-fw"></i>返回登录</a></p>
+            </div>
+        </form>
     </div>
-</div>
-
-<!-- Bootstrap core JavaScript-->
-<script th:src="@{/vendor/jquery/jquery.min.js}"></script>
-<script th:src="@{/vendor/bootstrap/js/bootstrap.bundle.min.js}"></script>
-
-<!-- Core plugin JavaScript-->
-<script th:src="@{/vendor/jquery-easing/jquery.easing.min.js}"></script>
-
+</section>
+<!-- Essential javascripts for application to work-->
+<script th:src="@{/js/jquery-3.2.1.min.js}"></script>
+<script th:src="@{/js/popper.min.js}"></script>
+<script th:src="@{/js/bootstrap.min.js}"></script>
+<script th:src="@{/js/main.js}"></script>
+<!-- The javascript plugin to display page loading on top-->
+<script th:src="@{/js/plugins/pace.min.js}"></script>
+<script type="text/javascript">
+      // Login Page Flipbox control
+      $('.login-content [data-toggle="flip"]').click(function() {
+      	$('.login-box').toggleClass('flipped');
+      	return false;
+      });
+    </script>
 </body>
-
 </html>

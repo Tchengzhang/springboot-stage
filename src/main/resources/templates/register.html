@@ -1,15 +1,54 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
-    <meta charset="UTF-8">
-    <title>register</title>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- Main CSS-->
+    <link rel="stylesheet" type="text/css" th:href="@{/css/main.css}">
+    <!-- Font-icon css-->
+    <link rel="stylesheet" type="text/css" th:href="@{https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css}">
+    <title>注册</title>
 </head>
 <body>
-错误信息：<h4 th:text="${msg}"></h4>
-<form action="/register" method="post">
-    <p>账号：<input type="text" name="username"/></p>
-    <p>密码：<input type="text" name="password"/></p>
-    <p><input type="submit" value="注册"/></p>
-</form>
+<section class="material-half-bg">
+    <div class="cover"></div>
+</section>
+<section class="login-content">
+    <div class="logo">
+        <h1>Vali</h1>
+    </div>
+    <div class="login-box">
+        <form class="login-form" th:action="@{/register}" th:method="POST">
+            <h3 class="login-head"><i class="fa fa-lg fa-fw fa-user"></i>注册</h3>
+            <div class="form-group">
+                <label class="control-label">账号<span th:text="${message}" style="color: red; margin-left: 10px;"/></label>
+                <input class="form-control" type="text" placeholder="账号" autofocus name="username" />
+            </div>
+            <div class="form-group">
+                <label class="control-label">密码</label>
+                <input class="form-control" type="password" placeholder="密码" name="password" />
+            </div>
+            <div class="form-group">
+                <label class="control-label">真实姓名</label>
+                <input class="form-control" type="text" placeholder="真实姓名" name="nickname" />
+            </div>
+
+            <div class="form-group btn-container">
+                <button class="btn btn-primary btn-block"><i class="fa fa-sign-in fa-lg fa-fw"></i>注册</button>
+            </div>
+        </form>
+    </div>
+</section>
+<!-- Essential javascripts for application to work-->
+<script th:src="@{/js/jquery-3.2.1.min.js}"></script>
+<script th:src="@{/js/popper.min.js}"></script>
+<script th:src="@{/js/bootstrap.min.js}"></script>
+<script th:src="@{/js/main.js}"></script>
+<!-- The javascript plugin to display page loading on top-->
+<script th:src="@{/js/plugins/pace.min.js}"></script>
+<script type="text/javascript">
+
+    </script>
 </body>
 </html>

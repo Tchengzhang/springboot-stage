@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+</head>
+<body>
+<div class="row" th:fragment="page(page)">
+    <div class="col-md-9">共<span th:text="${page.totalElements}"/>条，共<span th:text="${page.totalPages}"/>页</div>
+    <div class="bs-component" style="margin-bottom: 15px;">
+        <input id="pageNumber" name="page" type="hidden"/>
+        <div class="btn-toolbar" role="toolbar" aria-label="Toolbar with button groups">
+            <div class="btn-group mr-2" role="group" aria-label="First group">
+                <button class="btn btn-secondary" type="button" th:onclick="'$.pageSkip(\''+${page.number - 1}+'\');'" th:disabled="${page.number < 1}">上一页</button>
+                <button th:class="${page.number == (i - 1)} ? 'active btn btn-secondary' : 'btn btn-secondary'" type="button"
+                        th:each="i : ${#numbers.sequence(1, page.totalPages)}"
+                        th:if="${(page.number - (i - 1)) >= -2 && (page.number - (i - 1)) <= 2}"
+                        th:text="${i}" th:onclick="'$.pageSkip(\''+${i - 1}+'\');'"/>
+                <button class="btn btn-secondary" type="button" th:onclick="'$.pageSkip(\''+${page.number + 1}+'\');'" th:disabled="${(page.number + 1) == page.totalPages}">下一页</button>
+            </div>
+        </div>
+    </div>
+    <script th:inline="javascript">
+        $(function(){
+            $.pageSkip = function(pageNumber){
+                $('#pageNumber').val(pageNumber);
+                $('#searchForm').submit();
+            }
+        })
+    </script>
+</div>
+</body>
+</html>

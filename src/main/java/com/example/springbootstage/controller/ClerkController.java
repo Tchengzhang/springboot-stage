@@ -1,11 +1,11 @@
 package com.example.springbootstage.controller;
 
 import com.example.springbootstage.annotation.WebLog;
-import com.example.springbootstage.entity.Store;
-import com.example.springbootstage.entity.Clerk;
+import com.example.springbootstage.entity.work.Store;
+import com.example.springbootstage.entity.work.Clerk;
 import com.example.springbootstage.excel.ExcelUtil;
-import com.example.springbootstage.service.StoreService;
-import com.example.springbootstage.service.ClerkService;
+import com.example.springbootstage.service.work.ClerkService;
+import com.example.springbootstage.service.work.StoreService;
 import com.example.springbootstage.utils.DateUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;

@@ -2,12 +2,11 @@ package com.example.springbootstage.aspect;
 
 
 import com.example.springbootstage.annotation.WebLog;
-import com.example.springbootstage.entity.RequestLog;
-import com.example.springbootstage.entity.UserInfo;
-import com.example.springbootstage.service.RequestLogService;
+import com.example.springbootstage.entity.system.RequestLog;
+import com.example.springbootstage.service.system.RequestLogService;
 import com.example.springbootstage.utils.IpUtil;
 import com.example.springbootstage.utils.JsonUtils;
-import org.apache.shiro.SecurityUtils;
+import com.example.springbootstage.utils.UserHelper;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.*;
 import org.aspectj.lang.reflect.MethodSignature;
@@ -86,7 +85,7 @@ public class WebLogAspect {
             params = JsonUtils.toJson(paramsTmpMap);
         }
         requestLog.setParams(params);
-        String username = (String) SecurityUtils.getSubject().getPrincipal();
+        String username = UserHelper.getCurrentUser();
         requestLog.setUsername(username);
 
         requestLog.setTime(time);

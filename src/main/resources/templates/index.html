@@ -1,15 +1,18 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<html lang="en" xmlns:layout="http://www.ultraq.net.nz/web/thymeleaf/layout" layout:decorator="layout/layout">
 <head>
-    <meta charset="UTF-8">
-    <title>index</title>
 </head>
-<body>
-<h1>index</h1>
-<a class="btn btn-danger" th:href="@{/brand/create}">新增品牌</a>
-<a class="btn btn-danger" th:href="@{/model/create}">新增型号</a>
-<a class="btn btn-danger" th:href="@{/package/create}">新增套餐</a>
-<a class="btn btn-danger" th:href="@{/store/create}">新增门店</a>
-<a class="btn btn-danger" th:href="@{/clerk/create}">新增店员</a>
+<body class="app sidebar-mini rtl">
+<main class="app-content" layout:fragment="content">
+    <div class="app-title">
+        <div>
+            <h1><i class="fa fa-dashboard"></i> 控制台</h1>
+        </div>
+        <ul class="app-breadcrumb breadcrumb">
+            <li class="breadcrumb-item"><i class="fa fa-home fa-lg"></i></li>
+            <li class="breadcrumb-item"><a href="#">控制台</a></li>
+        </ul>
+    </div>
+</main>
 </body>
 </html>

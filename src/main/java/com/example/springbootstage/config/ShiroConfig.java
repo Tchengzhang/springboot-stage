@@ -1,7 +1,10 @@
 package com.example.springbootstage.config;
 
+import at.pollux.thymeleaf.shiro.dialect.ShiroDialect;
 import com.example.springbootstage.filter.MyFormAuthenticationFilter;
+import com.example.springbootstage.utils.Params;
 import org.apache.shiro.authc.credential.HashedCredentialsMatcher;
+import org.apache.shiro.cache.ehcache.EhCacheManager;
 import org.apache.shiro.mgt.SecurityManager;
 import org.apache.shiro.spring.security.interceptor.AuthorizationAttributeSourceAdvisor;
 import org.apache.shiro.spring.web.ShiroFilterFactoryBean;
@@ -111,7 +114,6 @@ public class ShiroConfig {
         mappings.setProperty("DatabaseException", "databaseError");//数据库异常处理
         mappings.setProperty("UnauthorizedException", "403");
         r.setExceptionMappings(mappings);  // None by default
-        r.setDefaultErrorView("error");    // No default
         r.setExceptionAttribute("ex");     // Default is "exception"
         //r.setWarnLogCategory("example.MvcLogger");     // No default
         return r;

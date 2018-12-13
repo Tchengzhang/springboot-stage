@@ -11,7 +11,7 @@ import javax.servlet.ServletResponse;
 public class MyFormAuthenticationFilter extends FormAuthenticationFilter {
     @Override
     protected boolean onLoginSuccess(AuthenticationToken token, Subject subject, ServletRequest request, ServletResponse response) throws Exception {
-        String successUrl = "/index";
+        String successUrl = "/home";
         WebUtils.issueRedirect(request,response,successUrl);
         return false;
     }

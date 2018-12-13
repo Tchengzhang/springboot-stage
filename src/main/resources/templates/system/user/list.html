@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/web/thymeleaf/layout" layout:decorator="layout/layout" xmlns:shiro="http://www.pollix.at/thymeleaf/shiro">
+<head>
+</head>
+<body class="app sidebar-mini rtl">
+<main class="app-content" layout:fragment="content">
+    <div class="app-title">
+        <div>
+            <h1><i class="fa fa-user-o"></i> 用户列表</h1>
+        </div>
+        <ul class="app-breadcrumb breadcrumb">
+            <li class="breadcrumb-item"><i class="fa fa-home fa-lg"></i></li>
+            <li class="breadcrumb-item"><a href="#">用户列表</a></li>
+        </ul>
+    </div>
+    <div class="row">
+        <div class="col-md-12">
+            <div class="tile">
+                <div class="tile-body">
+                    <div class="row button_div" style="margin-bottom: 10px;">
+                        <p shiro:hasPermission = "system_user:create"><a class="btn btn-primary icon-btn" th:href="@{/user/add}"><i class="fa fa-plus"></i>新增</a></p>
+                        <form th:action="@{/role/list}" id="searchForm" method="post">
+                        </form>
+                    </div>
+                    <div class="row">
+                        <table class="table table-hover table-bordered" id="sampleTable">
+                            <thead>
+                            <tr>
+                                <th>用户名</th>
+                                <th>姓名</th>
+                                <th>操作</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr th:each="e : ${list}">
+                                <td th:text="${e.username}"></td>
+                                <td th:text="${e.nickname}"></td>
+                                <td>
+                                    <div class="btn-group">
+                                        <a class="btn btn-primary" th:href="@{'/user/edit/' + ${e.id}}" shiro:hasPermission = "system_user:edit"><i class="fa fa-lg fa-edit"></i></a>
+                                        <a class="btn btn-primary" href="#delete" th:onclick="'javascript:del(\''+${e.id}+'\');'" shiro:hasPermission = "system_user:delete"><i class="fa fa-lg fa-trash"></i>
+                                        <a class="btn btn-primary" href="#changePassword" th:onclick="'javascript:changePassword(\''+${e.id}+'\');'" shiro:hasPermission = "system_user:edit"><i class="fa fa-lg fa-superpowers"></i></a>
+                                    </div>
+                                </td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script th:inline="javascript" type="text/javascript">
+    /*<![CDATA[*/
+    let msg = /*[[${message}]]*/;
+    /*]]>*/
+    if(msg != null){
+        alert(msg);
+    }
+
+    function changePassword(id){
+        layer.confirm('确定重置该用户密码?', function(){
+            $('#searchForm').attr('action', '/user/change_password');
+            $('#searchForm').append('<input name="id" value="' + id + '" type="hidden"/>');
+            $('#searchForm').submit();
+            layer.closeAll();
+        }, function(){
+            layer.closeAll();
+        })
+    }
+
+    function del(id){
+        layer.confirm('确定删除?', function(){
+            $('#searchForm').attr('action', '/user/delete');
+            $('#searchForm').append('<input name="id" value="' + id + '" type="hidden"/>');
+            $('#searchForm').submit();
+            layer.closeAll();
+        }, function(){
+            layer.closeAll();
+        })
+    }
+    </script>
+</main>
+</body>
+</html>

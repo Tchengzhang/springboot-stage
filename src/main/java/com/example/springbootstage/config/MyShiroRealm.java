@@ -1,62 +1,67 @@
 package com.example.springbootstage.config;
 
 
-import com.example.springbootstage.entity.SysPermission;
-import com.example.springbootstage.entity.SysRole;
-import com.example.springbootstage.entity.UserInfo;
-import com.example.springbootstage.service.UserInfoService;
-import org.apache.shiro.authc.AuthenticationException;
-import org.apache.shiro.authc.AuthenticationInfo;
-import org.apache.shiro.authc.AuthenticationToken;
-import org.apache.shiro.authc.SimpleAuthenticationInfo;
+import com.example.springbootstage.entity.system.Permission;
+import com.example.springbootstage.entity.system.Role;
+import com.example.springbootstage.entity.system.User;
+import com.example.springbootstage.service.system.UserService;
+import org.apache.shiro.authc.*;
 import org.apache.shiro.authz.AuthorizationInfo;
 import org.apache.shiro.authz.SimpleAuthorizationInfo;
 import org.apache.shiro.realm.AuthorizingRealm;
 import org.apache.shiro.subject.PrincipalCollection;
+import org.apache.shiro.util.ByteSource;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.annotation.Resource;
+import java.io.Serializable;
 
-import static org.apache.shiro.util.ByteSource.Util.bytes;
-
+/**
+ * shiro配置类
+ * Created by WangHong on 2018/3/26.
+ */
 public class MyShiroRealm extends AuthorizingRealm {
-    @Resource
-    private UserInfoService userInfoService;
 
+    private Logger logger = LoggerFactory.getLogger(this.getClass());
+
+    @Resource
+    private UserService userService;
+
+    //角色权限和对应权限添加
     @Override
     protected AuthorizationInfo doGetAuthorizationInfo(PrincipalCollection principals) {
+        logger.info("调用授权检测。。。。。。");
         System.out.println("权限配置-->MyShiroRealm.doGetAuthorizationInfo()");
-        SimpleAuthorizationInfo authorizationInfo = new SimpleAuthorizationInfo();
-        UserInfo userInfo = (UserInfo) principals.getPrimaryPrincipal();
-        for (SysRole role : userInfo.getRoleList()) {
-            authorizationInfo.addRole(role.getRole());
-            for (SysPermission p : role.getPermissions()) {
-                authorizationInfo.addStringPermission(p.getPermission());
-            }
+        User user = (User) principals.getPrimaryPrincipal();
+        if(user != null){
+            //添加角色和权限
+            SimpleAuthorizationInfo simpleAuthorizationInfo = new SimpleAuthorizationInfo();
+            simpleAuthorizationInfo.setRoles(user.getRoleNames());
+            simpleAuthorizationInfo.setStringPermissions(user.getPermissionNames());
+            logger.info(String.format("用户[%s]登录成功,获取权限集合:%s", user.getUsername(), user.getPermissionNames().toString()));
+            return simpleAuthorizationInfo;
         }
-        return authorizationInfo;
+        return null;
     }
 
-    /*主要是用来进行身份认证的，也就是说验证用户输入的账号和密码是否正确。*/
+    //用户认证
     @Override
-    protected AuthenticationInfo doGetAuthenticationInfo(AuthenticationToken token)
-            throws AuthenticationException {
-        System.out.println("MyShiroRealm.doGetAuthenticationInfo()");
-        //获取用户的输入的账号.
-        String username = (String) token.getPrincipal();
-        System.out.println(token.getCredentials());
-        //通过username从数据库中查找 User对象，如果找到，没找到.
-        //实际项目中，这里可以根据实际情况做缓存，如果不做，Shiro自己也是有时间间隔机制，2分钟内不会重复执行该方法
-        UserInfo userInfo = userInfoService.findByUsername(username);
-        //System.out.println("----->>userInfo=" + userInfo);
-        if (userInfo == null) {
+    protected AuthenticationInfo doGetAuthenticationInfo(AuthenticationToken authenticationToken) throws AuthenticationException {
+        UsernamePasswordToken token = (UsernamePasswordToken) authenticationToken;
+        logger.info(String.format("用户[%s]尝试登录,...", token.getUsername()));
+
+        //获取用户信息
+        String name = token.getUsername();
+        User user = userService.findByUsername(name);
+        if (user == null) {
+            //这里返回后会报出对应异常
             return null;
         }
-        return new SimpleAuthenticationInfo(
-                username, //用户名
-                userInfo.getPassword(), //密码
-                bytes(userInfo.getCredentialsSalt()),//salt=username+salt
-                getName()  //realm name
-        );
+        //设置盐值
+        ByteSource salt = ByteSource.Util.bytes(user.getCredentialsSalt());
+        return new SimpleAuthenticationInfo(user, user.getPassword(), salt, getName());
     }
+
 
 }
