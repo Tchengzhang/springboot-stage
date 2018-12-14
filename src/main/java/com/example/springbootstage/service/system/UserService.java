@@ -1,6 +1,7 @@
 package com.example.springbootstage.service.system;
 
 
+import com.example.springbootstage.dao.system.RoleDao;
 import com.example.springbootstage.dao.system.UserDao;
 import com.example.springbootstage.entity.system.User;
 import com.example.springbootstage.utils.Params;
@@ -15,6 +16,7 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.annotation.Resource;
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 /**
  * Created by WangHong on 2018/3/26.
@@ -26,6 +28,9 @@ public class UserService {
 
     @Resource
     private UserDao userDao;
+
+    @Resource
+    private RoleDao roleDao;
 
     @Transactional(readOnly = true)
     public User findByUsername(final String username) {
@@ -69,8 +74,14 @@ public class UserService {
 
     public void save(User entity) {
         if (entity.getId() == null) {
-            String password = this.createPassword(Params.PASSWORD, entity.getUsername(), entity.getSalt());
+            String salt = UUID.randomUUID().toString().replace("-", "");
+            String password = this.createPassword(Params.PASSWORD, entity.getUsername(), salt);
             entity.setPassword(password);
+            entity.setSalt(salt);
+        }
+        entity.getRoles().clear();
+        for (String id : entity.getRoleIds()) {
+            entity.getRoles().add(roleDao.findById(Long.valueOf(id)).get());
         }
         userDao.save(entity);
     }

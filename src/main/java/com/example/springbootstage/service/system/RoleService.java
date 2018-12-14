@@ -25,36 +25,34 @@ public class RoleService {
     @Resource
     private PermissionDao permissionDao;
 
-    public void changeStatus(final Long id){
+    public void changeStatus(final Long id) {
         Role entity = roleDao.findById(id).get();
-        if(entity != null){
+        if (entity != null) {
             entity.setState(1);
             roleDao.save(entity);
         }
     }
 
-    public void save(Role entity){
-        if(entity.getId() != null){
-            entity.getPermissions().clear();
-            for(String id : entity.getPermissionIds()){
-                entity.getPermissions().add(permissionDao.findById(Long.valueOf(id)).get());
-            }
+    public void save(Role entity) {
+        entity.getPermissions().clear();
+        for (String id : entity.getPermissionIds()) {
+            entity.getPermissions().add(permissionDao.findById(Long.valueOf(id)).get());
         }
         roleDao.save(entity);
     }
 
     @Transactional(readOnly = true)
-    public List<Role> findByState(final int state){
+    public List<Role> findByState(final int state) {
         return roleDao.findByState(state);
     }
 
     @Transactional(readOnly = true)
-    public Role findOne(final Long id){
+    public Role findOne(final Long id) {
         return roleDao.findById(id).orElse(new Role());
     }
 
     @Transactional(readOnly = true)
-    public Role findByIdAndState(final Long id, final int state){
+    public Role findByIdAndState(final Long id, final int state) {
         return roleDao.findByIdAndState(id, state);
     }
 }
