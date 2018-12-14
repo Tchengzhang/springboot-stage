@@ -15,4 +15,4 @@ spring:
     cache: false
     encoding: UTF-8
 
-debug: false
+debug: true

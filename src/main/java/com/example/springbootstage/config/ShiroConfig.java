@@ -2,12 +2,13 @@ package com.example.springbootstage.config;
 
 import at.pollux.thymeleaf.shiro.dialect.ShiroDialect;
 import com.example.springbootstage.filter.MyFormAuthenticationFilter;
-import com.example.springbootstage.utils.Params;
 import org.apache.shiro.authc.credential.HashedCredentialsMatcher;
 import org.apache.shiro.cache.ehcache.EhCacheManager;
+
 import org.apache.shiro.mgt.SecurityManager;
 import org.apache.shiro.spring.security.interceptor.AuthorizationAttributeSourceAdvisor;
 import org.apache.shiro.spring.web.ShiroFilterFactoryBean;
+
 import org.apache.shiro.web.mgt.DefaultWebSecurityManager;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -44,9 +45,11 @@ public class ShiroConfig {
         filterChainDefinitionMap.put("/webjars/springfox-swagger-ui/**", "anon");
         //配置退出 过滤器,其中的具体的退出代码Shiro已经替我们实现了
         filterChainDefinitionMap.put("/logout", "logout");
+
         //<!-- 过滤链定义，从上向下顺序执行，一般将/**放在最为下边 -->:这是一个坑呢，一不小心代码就不好使了;
         //<!-- authc:所有url都必须认证通过才可以访问; anon:所有url都都可以匿名访问-->
         filterChainDefinitionMap.put("/**", "authc");
+
         //解决登录成功后无法跳转到successUrl的问题
         Map<String, Filter> map = new LinkedHashMap<>();
         map.put("authc", new MyFormAuthenticationFilter());
@@ -54,13 +57,30 @@ public class ShiroConfig {
         // 如果不设置默认会自动寻找Web工程根目录下的"/login.jsp"页面
         shiroFilterFactoryBean.setLoginUrl("/login");
         // 登录成功后要跳转的链接
-        shiroFilterFactoryBean.setSuccessUrl("/index");
+        shiroFilterFactoryBean.setSuccessUrl("/home");
 
         //未授权界面;
         shiroFilterFactoryBean.setUnauthorizedUrl("/403");
         shiroFilterFactoryBean.setFilterChainDefinitionMap(filterChainDefinitionMap);
         return shiroFilterFactoryBean;
     }
+
+    /**
+     * shiro缓存管理器;
+     * 需要注入对应的其它的实体类中：
+     * 1、安全管理器：securityManager
+     * 可见securityManager是整个shiro的核心；
+     *
+     * @return
+     */
+    @Bean
+    public EhCacheManager ehCacheManager() {
+        System.out.println("ShiroConfiguration.getEhCacheManager()");
+        EhCacheManager cacheManager = new EhCacheManager();
+        cacheManager.setCacheManagerConfigFile("classpath:config/ehcache-shiro.xml");
+        return cacheManager;
+    }
+
 
     /**
      * 凭证匹配器
@@ -71,7 +91,9 @@ public class ShiroConfig {
      */
     @Bean
     public HashedCredentialsMatcher hashedCredentialsMatcher() {
-        HashedCredentialsMatcher hashedCredentialsMatcher = new HashedCredentialsMatcher();
+        //HashedCredentialsMatcher hashedCredentialsMatcher = new HashedCredentialsMatcher();
+        //使用缓存对登录次数进行限制
+        HashedCredentialsMatcher hashedCredentialsMatcher = new RetryLimitHashedCredentialsMatcher(ehCacheManager());
         hashedCredentialsMatcher.setHashAlgorithmName("md5");//散列算法:这里使用MD5算法;
         hashedCredentialsMatcher.setHashIterations(2);//散列的次数，比如散列两次，相当于 md5(md5(""));
         return hashedCredentialsMatcher;
@@ -89,6 +111,8 @@ public class ShiroConfig {
     public SecurityManager securityManager() {
         DefaultWebSecurityManager securityManager = new DefaultWebSecurityManager();
         securityManager.setRealm(myShiroRealm());
+        //注入缓存管理器;
+        securityManager.setCacheManager(ehCacheManager());
         return securityManager;
     }
 
@@ -118,4 +142,5 @@ public class ShiroConfig {
         //r.setWarnLogCategory("example.MvcLogger");     // No default
         return r;
     }
+
 }

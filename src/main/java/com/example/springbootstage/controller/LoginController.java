@@ -54,8 +54,8 @@ public class LoginController {
                 case "org.apache.shiro.authc.pam.DisabledAccountException":
                     message = "此账号已被禁用!";//此账号已被禁用
                     break;
-                case "org.apache.shiro.authc.LockedAccountException":
-                    message = "此账号密码输入错误已达5次被锁定，30分钟后解锁!";//此账号密码输入错误已达5次被锁定，30分钟后解锁
+                case "org.apache.shiro.authc.ExcessiveAttemptsException":
+                    message = "此账号密码输入错误已达5次被锁定，10分钟后解锁!";//此账号密码输入错误已达5次被锁定，30分钟后解锁
                     break;
                 case "org.apache.shiro.authc.AuthenticationException":
                     message = "账号认证失败!";//账号认证失败

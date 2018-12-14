@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/web/thymeleaf/layout"
+      layout:decorator="layout/layout">
+<head>
+    <meta charset="UTF-8">
+</head>
+<body class="app sidebar-mini rtl">
+<main class="app-content" layout:fragment="content">
+    <div class="app-title">
+        <div>
+            <h1><i class="fa fa-user-circle-o"></i> 品牌
+                <span th:text="新增" th:if="${entity.id == null}"/>
+                <span th:text="编辑" th:if="${entity.id != null}"/>
+            </h1>
+        </div>
+        <ul class="app-breadcrumb breadcrumb">
+            <li class="breadcrumb-item"><i class="fa fa-home fa-lg"></i></li>
+            <li class="breadcrumb-item"><a href="#">品牌列表</a></li>
+            <li class="breadcrumb-item"><a href="#">
+                <span th:text="新增" th:if="${entity.id == null}"/>
+                <span th:text="编辑" th:if="${entity.id != null}"/>
+            </a></li>
+        </ul>
+    </div>
+    <div class="row">
+        <div class="col-md-12">
+            <div class="tile">
+                <form th:action="@{/package/save}" method="post" id="inputForm">
+                    <input name="id" type="hidden" th:value="${entity.id}"/>
+                    <div class="row">
+                        <div class="col-lg-6">
+                            <div class="form-group">
+                                <fieldset>
+                                    <label class="control-label" for="nameInput">名称</label>
+                                    <input class="form-control" id="nameInput" type="text" placeholder="名称" name="name"
+                                           required th:value="${entity.name}" th:readOnly="${entity.id != null}"/>
+                                </fieldset>
+                            </div>
+                            <div class="form-group">
+                                <fieldset>
+                                    <label class="control-label" for="typeInput">公司</label>
+                                    <input class="form-control" id="typeInput" type="text" placeholder="公司" name="type"
+                                           required th:value="${entity.type}" th:readOnly="${entity.id != null}"/>
+                                </fieldset>
+                            </div>
+
+                        </div>
+                    </div>
+                    <div class="tile-footer">
+                        <button class="btn btn-primary" type="submit">提交</button>
+                        <button class="btn" type="button" onclick="history.back(-1);">取消</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</main>
+</body>
+</html>

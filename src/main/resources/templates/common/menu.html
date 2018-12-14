@@ -23,6 +23,10 @@
                         class="icon fa fa-bars"></i>&nbsp;&nbsp;机型管理</a>
             </li>
             <li shiro:hasPermission="work_user:view">
+                <a id="package_item" class="treeview-item" th:href="@{/package?menuId=package}"><i
+                        class="icon fa fa-bars"></i>&nbsp;&nbsp;套餐管理</a>
+            </li>
+            <li shiro:hasPermission="work_user:view">
                 <a id="store_item" class="treeview-item" th:href="@{/store?menuId=store}"><i
                         class="icon fa fa-bars"></i>&nbsp;&nbsp;门店管理</a>
             </li>
