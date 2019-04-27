@@ -32,13 +32,13 @@ public class SpringbootStageApplicationTests {
 
     @Test
     public void test(){
-//        String password = "123456";
-//        String name = "admin";
-//        String salt = "0502833dc6fa41a2ab3875f74121b026";
-//        ByteSource byteSource = ByteSource.Util.bytes(name + salt);
-//        Object obj = new SimpleHash("MD5", password, byteSource, 2);
-//        System.out.println("===================================="+obj.toString());
-        System.out.println("++++++++++++++++++++++++++++++"+System.getProperty("java.io.tmpdir"));
+        String password = "123456";
+        String name = "admin";
+        String salt = "0502833dc6fa41a2ab3875f74121b026";
+        ByteSource byteSource = ByteSource.Util.bytes(name + salt);
+        Object obj = new SimpleHash("MD5", password, byteSource, 2);
+        System.out.println("===================================="+obj.toString());
+//        System.out.println("++++++++++++++++++++++++++++++"+System.getProperty("java.io.tmpdir"));
     }
 
 

@@ -1,5 +1,7 @@
 package com.example.springbootstage.service.work;
 
+import com.example.springbootstage.annotation.TargetDateSource;
+import com.example.springbootstage.config.DataSourceConfig;
 import com.example.springbootstage.dao.work.ModelDao;
 import com.example.springbootstage.dao.work.PackageDao;
 import com.example.springbootstage.dao.work.StoreDao;
@@ -23,6 +25,7 @@ public class StoreService implements BaseService<Store> {
     private PackageDao packageDao;
 
     @Override
+    @TargetDateSource(dataSource = DataSourceConfig.WRITE_DATASOURCE_KEY)
     public Store save(Store entity) {
         entity.getPackageList().clear();
         for (String id : entity.getPackageIds()) {
@@ -32,12 +35,14 @@ public class StoreService implements BaseService<Store> {
     }
 
     @Override
+    @TargetDateSource(dataSource = DataSourceConfig.READ_DATASOURCE_KEY)
     public Store getById(Long id) {
         Optional<Store> optional = storeDao.findById(id);
         return optional.orElse(null);
     }
 
     @Override
+    @TargetDateSource(dataSource = DataSourceConfig.READ_DATASOURCE_KEY)
     public List<Store> getAll() {
         Iterable<Store> it = storeDao.findAll();
         List<Store> storeList = new LinkedList<>();
@@ -46,6 +51,7 @@ public class StoreService implements BaseService<Store> {
     }
 
     @Override
+    @TargetDateSource(dataSource = DataSourceConfig.WRITE_DATASOURCE_KEY)
     public void delById(Long id) {
         storeDao.deleteById(id);
     }

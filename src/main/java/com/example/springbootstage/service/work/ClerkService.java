@@ -1,5 +1,7 @@
 package com.example.springbootstage.service.work;
 
+import com.example.springbootstage.annotation.TargetDateSource;
+import com.example.springbootstage.config.DataSourceConfig;
 import com.example.springbootstage.dao.work.ClerkDao;
 import com.example.springbootstage.entity.work.Clerk;
 import com.example.springbootstage.service.BaseService;
@@ -16,17 +18,20 @@ public class ClerkService implements BaseService<Clerk> {
     private ClerkDao clerkDao;
 
     @Override
+    @TargetDateSource(dataSource = DataSourceConfig.WRITE_DATASOURCE_KEY)
     public Clerk save(Clerk clerk) {
         return clerkDao.save(clerk);
     }
 
     @Override
+    @TargetDateSource(dataSource = DataSourceConfig.READ_DATASOURCE_KEY)
     public Clerk getById(Long id) {
         Optional<Clerk> optional = clerkDao.findById(id);
         return optional.orElse(null);
     }
 
     @Override
+    @TargetDateSource(dataSource = DataSourceConfig.READ_DATASOURCE_KEY)
     public List<Clerk> getAll() {
         Iterable<Clerk> it = clerkDao.findAll();
         List<Clerk> clerkList = new LinkedList<>();
@@ -35,6 +40,7 @@ public class ClerkService implements BaseService<Clerk> {
     }
 
     @Override
+    @TargetDateSource(dataSource = DataSourceConfig.WRITE_DATASOURCE_KEY)
     public void delById(Long id) {
         clerkDao.deleteById(id);
     }
